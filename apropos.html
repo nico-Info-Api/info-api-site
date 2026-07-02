@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="À propos de Nicolas Caron, fondateur d'Info-API — technicien certifié, développeur web passionné basé à Laval.">
+    <title>À propos | Info-API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ---- HERO ---- */
+        .about-hero {
+            padding: 148px 0 108px;
+            background: linear-gradient(140deg, #06060c 0%, #0a0a12 45%, #0f0f17 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: -20%; right: -8%;
+            width: 650px; height: 650px;
+            background: radial-gradient(circle, rgba(163,230,53,0.07) 0%, transparent 65%);
+            pointer-events: none;
+        }
+        .about-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%; left: -8%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(163,230,53,0.05) 0%, transparent 65%);
+            pointer-events: none;
+        }
+        .about-hero .container { position: relative; z-index: 1; }
+
+        .avatar {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: rgba(163,230,53,0.08);
+            border: 2px solid rgba(163,230,53,0.28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: #a3e635;
+            margin: 0 auto 24px;
+            box-shadow: 0 0 0 8px rgba(163,230,53,0.05);
+        }
+
+        .hero-role {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: #a3e635;
+            margin-bottom: 14px;
+        }
+
+        .about-hero h1 {
+            font-size: 52px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -1.8px;
+            margin-bottom: 22px;
+            line-height: 1.05;
+        }
+
+        .about-hero > .container > p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.55);
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.68;
+        }
+
+        /* ---- HISTOIRE ---- */
+        .histoire-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 72px;
+            align-items: start;
+        }
+
+        .histoire-text h2 { text-align: left; margin-bottom: 22px; }
+
+        .histoire-text p {
+            color: #8892a4;
+            font-size: 15.5px;
+            line-height: 1.78;
+            margin-bottom: 14px;
+        }
+
+        .histoire-text p strong { color: #f1f5f9; }
+
+        .traits { display: flex; flex-direction: column; gap: 14px; }
+
+        .trait {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: #16161f;
+            border: 1.5px solid #2a2a38;
+            border-radius: 12px;
+            padding: 20px;
+            transition: border-color 0.22s, transform 0.22s;
+        }
+
+        .trait:hover {
+            border-color: rgba(163,230,53,0.22);
+            transform: translateX(5px);
+        }
+
+        .trait-icon { flex-shrink: 0; margin-top: 2px; }
+        .trait-num {
+            width: 42px; height: 42px;
+            background: rgba(163,230,53,0.08);
+            border: 1.5px solid rgba(163,230,53,0.22);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: #a3e635; font-size: 13px; font-weight: 800;
+            flex-shrink: 0; letter-spacing: 0.5px; line-height: 1;
+        }
+
+        .trait-content strong {
+            display: block;
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 4px;
+        }
+
+        .trait-content span {
+            font-size: 13.5px;
+            color: #8892a4;
+            line-height: 1.55;
+        }
+
+        /* ---- STATS ---- */
+        .stats-band {
+            background: linear-gradient(140deg, #06060c 0%, #0a0a12 55%, #0f0f17 100%);
+            padding: 64px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 24px 20px;
+            border-right: 1px solid rgba(163,230,53,0.08);
+        }
+
+        .stat-item:last-child { border-right: none; }
+
+        .stat-number {
+            font-size: 44px;
+            font-weight: 800;
+            color: #a3e635;
+            letter-spacing: -2px;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            font-weight: 500;
+            line-height: 1.45;
+        }
+
+        /* ---- TIMELINE ---- */
+        .timeline {
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px; top: 10px; bottom: 10px;
+            width: 2px;
+            background: linear-gradient(to bottom, #a3e635, rgba(163,230,53,0.15));
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 28px;
+            margin-bottom: 28px;
+            align-items: flex-start;
+        }
+
+        .timeline-item:last-child { margin-bottom: 0; }
+
+        .timeline-dot {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: #16161f;
+            border: 2px solid #a3e635;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #a3e635;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 0 5px rgba(163,230,53,0.08);
+        }
+
+        .timeline-content {
+            background: #16161f;
+            border: 1.5px solid #2a2a38;
+            border-radius: 14px;
+            padding: 22px 26px;
+            flex: 1;
+            transition: border-color 0.22s, box-shadow 0.22s;
+        }
+
+        .timeline-content:hover {
+            border-color: rgba(163,230,53,0.22);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .timeline-date {
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: #a3e635;
+            margin-bottom: 7px;
+        }
+
+        .timeline-content h3 {
+            font-size: 16.5px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 4px;
+        }
+
+        .timeline-content .school {
+            font-size: 13.5px;
+            color: #8892a4;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content p {
+            font-size: 14px;
+            color: #8892a4;
+            line-height: 1.62;
+        }
+
+        .badge-status {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 9px;
+            border-radius: 100px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .badge-done {
+            background: rgba(163,230,53,0.1);
+            color: #a3e635;
+            border: 1px solid rgba(163,230,53,0.22);
+        }
+
+        .badge-active {
+            background: rgba(163,230,53,0.12);
+            color: #bef264;
+            border: 1px solid rgba(163,230,53,0.28);
+        }
+
+        /* ---- COMPETENCES ---- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .skill-group {
+            background: #16161f;
+            border: 1.5px solid #2a2a38;
+            border-radius: 16px;
+            padding: 28px 24px;
+            transition: border-color 0.22s, box-shadow 0.22s, transform 0.22s;
+        }
+
+        .skill-group:hover {
+            border-color: rgba(163,230,53,0.22);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+            transform: translateY(-4px);
+        }
+
+        .skill-group-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 18px;
+        }
+
+        .skill-group-title::before {
+            content: '';
+            display: inline-block;
+            width: 8px; height: 8px;
+            border-radius: 2px;
+            background: #a3e635;
+            flex-shrink: 0;
+        }
+
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+
+        .skill-tag {
+            font-size: 12.5px;
+            font-weight: 500;
+            color: #8892a4;
+            background: #0f0f17;
+            border: 1px solid #2a2a38;
+            border-radius: 6px;
+            padding: 4px 10px;
+        }
+
+        .skill-tag.primary {
+            background: rgba(163,230,53,0.08);
+            color: #a3e635;
+            border-color: rgba(163,230,53,0.2);
+        }
+
+        /* ---- TEMOIGNAGE ---- */
+        .temoignage-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .temoignage-card {
+            background: #16161f;
+            border: 1.5px solid #2a2a38;
+            border-radius: 22px;
+            padding: 56px 60px;
+            position: relative;
+            text-align: center;
+            box-shadow: 0 20px 56px rgba(0,0,0,0.35);
+        }
+
+        .quote-mark {
+            font-size: 96px;
+            line-height: 0.55;
+            color: #a3e635;
+            opacity: 0.1;
+            font-family: Georgia, serif;
+            position: absolute;
+            top: 38px; left: 48px;
+            pointer-events: none;
+        }
+
+        .stars {
+            font-size: 20px;
+            letter-spacing: 2px;
+            margin-bottom: 28px;
+        }
+
+        .temoignage-card blockquote {
+            font-size: 19px;
+            font-weight: 500;
+            color: #f1f5f9;
+            line-height: 1.68;
+            font-style: italic;
+            margin-bottom: 36px;
+            position: relative;
+            z-index: 1;
+            max-width: 620px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 36px;
+        }
+
+        .temoignage-client {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .client-avatar {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            background: rgba(163,230,53,0.1);
+            border: 1.5px solid rgba(163,230,53,0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: #a3e635;
+            flex-shrink: 0;
+        }
+
+        .client-info strong {
+            display: block;
+            font-size: 15px;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .client-info span {
+            font-size: 13px;
+            color: #8892a4;
+        }
+
+        /* ---- ENGAGEMENTS ---- */
+        .engagements-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            max-width: 840px;
+            margin: 0 auto;
+        }
+
+        .engagement {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            background: #16161f;
+            border: 1.5px solid #2a2a38;
+            border-radius: 14px;
+            padding: 28px 24px;
+            transition: border-color 0.22s, box-shadow 0.22s, transform 0.22s;
+        }
+
+        .engagement:hover {
+            border-color: rgba(163,230,53,0.22);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.3);
+            transform: translateY(-3px);
+        }
+
+        .engagement-icon {
+            width: 48px; height: 48px;
+            background: rgba(163,230,53,0.08);
+            border: 1.5px solid rgba(163,230,53,0.22);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #a3e635;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .engagement-text strong {
+            display: block;
+            font-size: 15.5px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 6px;
+        }
+
+        .engagement-text span {
+            font-size: 14px;
+            color: #8892a4;
+            line-height: 1.57;
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 768px) {
+            .about-hero h1 { font-size: 36px; letter-spacing: -1px; }
+            .histoire-grid { grid-template-columns: 1fr; gap: 44px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat-item:nth-child(2) { border-right: none; }
+            .stat-item:nth-child(3),
+            .stat-item:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.07); }
+            .stat-item:nth-child(4) { border-right: none; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .temoignage-card { padding: 36px 24px; }
+            .engagements-grid { grid-template-columns: 1fr; }
+            .timeline::before { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Info<span>API</span></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- OVERLAY MENU -->
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-overlay-inner">
+            <ul class="overlay-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li>
+                    <button class="overlay-dd-trigger">Services <span class="ov-arrow">+</span></button>
+                    <ul class="overlay-sub">
+                        <li><a href="sites-web.html">Sites web</a></li>
+                        <li><a href="automatisation.html">Solutions sur mesure</a></li>
+                        <li><a href="services.html">Forfaits entreprise</a></li>
+                    </ul>
+                </li>
+                <li><a href="apropos.html">À propos</a></li>
+                <li><a href="projets.html">Projets</a></li>
+            </ul>
+            <a href="soumission.html" class="overlay-cta">Prendre RDV Gratuitement</a>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="about-hero">
+        <div class="container">
+            <div class="img-ph" style="width:110px;height:110px;border-radius:50%;margin:0 auto 20px;gap:5px;">
+                <div class="img-ph-icon" style="width:28px;height:28px;"></div>
+                <span class="img-ph-label" style="font-size:9px;">Photo</span>
+            </div>
+            <p class="hero-role">Fondateur · Info-API</p>
+            <h1>Nicolas Caron</h1>
+            <p>Technicien certifié, développeur web passionné et entrepreneur à 19 ans — je bâtis des solutions numériques concrètes qui font gagner du temps et de l'argent aux PME et entrepreneurs de Laval.</p>
+        </div>
+    </section>
+
+    <!-- MON HISTOIRE -->
+    <section>
+        <div class="container">
+            <div class="histoire-grid fade-in">
+                <div class="histoire-text">
+                    <span class="section-tag">Mon parcours</span>
+                    <h2>Passionné d'informatique depuis l'âge de 15 ans.</h2>
+                    <p>L'informatique, c'est bien plus qu'un métier pour moi — c'est une passion que je cultive depuis <strong>4 ans</strong>, en dehors des cours, par curiosité et par plaisir. C'est cet amour du domaine qui m'a naturellement poussé à lancer <strong>Info-API</strong>.</p>
+                    <p>Tout a commencé lors de mon stage chez <strong>MC Microtech</strong>, où j'assistais le propriétaire dans le soutien informatique quotidien. Par passion, j'ai même développé un <strong>mini jeu vidéo</strong> pendant mon temps libre — parce que créer, c'est dans ma nature.</p>
+                    <p>En 2026, j'ai livré mon premier mandat freelance : un <strong>site web complet de 28 fichiers</strong> pour Groupe ABS, une compagnie de construction lavalloise — <strong>47 heures de développement</strong>, du premier pixel à la mise en ligne, de façon entièrement autonome.</p>
+                    <p>Info-API, c'est le projet de ma vie. Mon objectif est simple : <strong>innover pour les entrepreneurs, leur faire gagner du temps, de l'argent</strong>, et rendre leur quotidien plus serein.</p>
+                </div>
+                <div class="traits">
+                    <div class="trait">
+                        <div class="trait-num">01</div>
+                        <div class="trait-content">
+                            <strong>Créatif et rigoureux</strong>
+                            <span>Je construis des choses qui fonctionnent bien et qui ont l'air bien. Pas l'un ou l'autre — les deux. La discipline, c'est ce qui fait la différence.</span>
+                        </div>
+                    </div>
+                    <div class="trait">
+                        <div class="trait-num">02</div>
+                        <div class="trait-content">
+                            <strong>Je parle à mes clients</strong>
+                            <span>Pas de jargon inutile. Je prends le temps de comprendre ce que vous voulez vraiment, et je vous explique ce que je fais en termes clairs.</span>
+                        </div>
+                    </div>
+                    <div class="trait">
+                        <div class="trait-num">03</div>
+                        <div class="trait-content">
+                            <strong>Bilingue, basé à Laval</strong>
+                            <span>Français natif, anglais avancé. Disponible en personne dans la région de Laval ou à distance. Je réponds dans la journée.</span>
+                        </div>
+                    </div>
+                    <div class="trait">
+                        <div class="trait-num">04</div>
+                        <div class="trait-content">
+                            <strong>Je continue d'apprendre</strong>
+                            <span>DEC en réseau et sécurité informatiques en cours. Je reste à jour pour que vous n'ayez pas à vous en préoccuper.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats-band">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">4+</div>
+                    <div class="stat-label">Années de passion<br>en informatique</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">47h</div>
+                    <div class="stat-label">Investies sur un<br>seul projet client</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Projets web<br>livrés avec soin</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24h</div>
+                    <div class="stat-label">Délai de réponse<br>garanti</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMATION -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Formation</span>
+                <h2>Un parcours académique solide</h2>
+                <p class="section-sub">Deux programmes techniques reconnus, alimentés par une curiosité autodidacte constante.</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot">01</div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024 — En cours · Diplôme prévu 2026</div>
+                        <h3>DEC — Techniques réseau & sécurité informatiques <span class="badge-status badge-active">En cours</span></h3>
+                        <div class="school">Cégep Montmorency · Laval, Québec</div>
+                        <p>Spécialisation en infrastructure réseau, protocoles de communication (ADDS, DHCP, DNS), sécurité des systèmes et administration de serveurs Windows et Linux.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot">02</div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Décembre 2024 · Diplômé</div>
+                        <h3>DEP — Soutien informatique <span class="badge-status badge-done">Diplômé</span></h3>
+                        <div class="school">EHAL (École Paul-Émile-Dufresne) · Laval, Québec</div>
+                        <p>Programme intégré combinant Secondaire 4 & 5 avec une formation technique complète : maintenance matérielle, déploiement Windows, support client et dépannage réseau.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot">03</div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024 · Obtenu</div>
+                        <h3>Diplôme d'études secondaires <span class="badge-status badge-done">Obtenu</span></h3>
+                        <div class="school">École Curé-Antoine-Labelle · Laval, Québec</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMPETENCES -->
+    <section style="background: var(--navy);">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Compétences</span>
+                <h2>Mon arsenal technique</h2>
+                <p class="section-sub">Des compétences transversales pour couvrir tous vos besoins numériques.</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-group fade-in">
+                    <div class="skill-group-title">Développement Web</div>
+                    <div class="skill-tags">
+                        <span class="skill-tag primary">HTML5 / CSS3</span>
+                        <span class="skill-tag primary">JavaScript</span>
+                        <span class="skill-tag">PHP</span>
+                        <span class="skill-tag">MySQL / MariaDB</span>
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">C#</span>
+                        <span class="skill-tag">Apache</span>
+                        <span class="skill-tag">Design responsive</span>
+                    </div>
+                </div>
+                <div class="skill-group fade-in">
+                    <div class="skill-group-title">Automatisation</div>
+                    <div class="skill-tags">
+                        <span class="skill-tag primary">Python</span>
+                        <span class="skill-tag primary">PowerShell</span>
+                        <span class="skill-tag">Scripts batch</span>
+                        <span class="skill-tag">Déploiement WDS</span>
+                        <span class="skill-tag">Office 365</span>
+                    </div>
+                </div>
+                <div class="skill-group fade-in">
+                    <div class="skill-group-title">Systèmes & Réseaux</div>
+                    <div class="skill-tags">
+                        <span class="skill-tag primary">Windows 10/11</span>
+                        <span class="skill-tag primary">Windows Server 2019-2022</span>
+                        <span class="skill-tag">Server Core 2019</span>
+                        <span class="skill-tag">Linux</span>
+                        <span class="skill-tag">ADDS / DHCP / DNS</span>
+                        <span class="skill-tag">Sécurité informatique</span>
+                        <span class="skill-tag">Matériel PC / Laptop</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ENGAGEMENTS -->
+    <section style="background: var(--navy);">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Mes engagements</span>
+                <h2>Ce que vous pouvez attendre de moi</h2>
+                <p class="section-sub">Pas de jargon, pas de surprises. Juste des résultats concrets et une communication honnête.</p>
+            </div>
+            <div class="engagements-grid">
+                <div class="engagement fade-in">
+                    <div class="engagement-icon">01</div>
+                    <div class="engagement-text">
+                        <strong>Vous faire gagner du temps</strong>
+                        <span>Automatisation, sites web efficaces et solutions pensées pour alléger votre quotidien d'entrepreneur.</span>
+                    </div>
+                </div>
+                <div class="engagement fade-in">
+                    <div class="engagement-icon">02</div>
+                    <div class="engagement-text">
+                        <strong>Prix transparents, zéro surprise</strong>
+                        <span>Soumission gratuite et détaillée avant de commencer. Vous savez exactement ce que vous payez et pourquoi.</span>
+                    </div>
+                </div>
+                <div class="engagement fade-in">
+                    <div class="engagement-icon">03</div>
+                    <div class="engagement-text">
+                        <strong>Communication directe</strong>
+                        <span>Vous avez affaire à moi directement, pas à une équipe anonyme. Retour sous 24h, disponible en personne ou à distance.</span>
+                    </div>
+                </div>
+                <div class="engagement fade-in">
+                    <div class="engagement-icon">04</div>
+                    <div class="engagement-text">
+                        <strong>Livraison soignée jusqu'au bout</strong>
+                        <span>Je ne livre pas le minimum. Je livre quelque chose dont vous serez fier de montrer à vos propres clients.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2>Travaillons ensemble.</h2>
+            <p>Une idée de projet? Posez-moi vos questions ou demandez une soumission gratuite. Premier retour sous 24h.</p>
+            <a href="soumission.html" class="btn-primary">Demander une soumission</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>© 2026 Info-API — Nicolas Caron | Laval, Québec</p>
+            <p><a href="mailto:nicocaron26@gmail.com">nicocaron26@gmail.com</a> | <a href="tel:4383665758">438-366-5758</a></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

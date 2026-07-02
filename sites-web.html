@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sites web professionnels à Laval — vitrine, restaurant, e-commerce, landing page et plus. Info-API développe votre présence en ligne.">
+    <title>Sites web | Info-API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+    .siteweb-hero {
+        padding: 148px 0 72px;
+        background: linear-gradient(140deg, #06060c 0%, #0a0a12 48%, #0f0f17 100%);
+        text-align: center; position: relative; overflow: hidden;
+    }
+    .siteweb-hero::before {
+        content: ''; position: absolute; bottom: -20%; right: -5%;
+        width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(163,230,53,0.07) 0%, transparent 65%);
+        pointer-events: none;
+    }
+    .siteweb-hero .container { position: relative; z-index: 1; }
+    .siteweb-hero h1 { font-size: 50px; font-weight: 800; color: #fff; letter-spacing: -1.8px; margin-bottom: 16px; }
+    .siteweb-hero h1 span { color: #a3e635; }
+    .siteweb-hero p { font-size: 17px; color: rgba(255,255,255,0.55); max-width: 500px; margin: 0 auto; line-height: 1.65; }
+
+    /* Pourquoi un site */
+    .pourquoi-section { padding: 80px 0; background: #0f0f17; }
+    .pourquoi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+    .pq-card { background: #16161f; border: 1.5px solid #2a2a38; border-radius: 16px; padding: 28px 24px; text-align: center; }
+    .pq-stat { font-size: 28px; font-weight: 800; color: #a3e635; margin-top: 0; margin-bottom: 8px; }
+    .pq-card h3 { font-size: 16px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; }
+    .pq-card p { font-size: 13.5px; color: #8892a4; line-height: 1.6; }
+    .pq-stat { font-size: 28px; font-weight: 800; color: #a3e635; margin-top: 12px; }
+
+    /* Types de sites */
+    .types-section { padding: 80px 0; background: #16161f; }
+    .types-grid { display: flex; flex-direction: column; gap: 24px; margin-top: 48px; }
+    .type-row {
+        display: grid; grid-template-columns: 320px 1fr; gap: 32px; align-items: center;
+        background: #0f0f17; border: 1.5px solid #2a2a38; border-radius: 20px; overflow: hidden;
+        transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .type-row:hover { border-color: rgba(163,230,53,0.3); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .type-row:nth-child(even) { grid-template-columns: 1fr 320px; }
+    .type-row:nth-child(even) .type-visual { order: 2; }
+    .type-row:nth-child(even) .type-content { order: 1; }
+    .type-visual {
+        background: linear-gradient(135deg, #0a0a12, #16161f);
+        padding: 36px 28px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        min-height: 220px; text-align: center;
+        border-right: 1px solid #2a2a38;
+    }
+    .type-visual-name { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .type-badge { background: rgba(163,230,53,0.12); border: 1px solid rgba(163,230,53,0.22); color: #a3e635; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 100px; }
+    .type-content { padding: 32px 32px 32px 0; }
+    .type-row:nth-child(even) .type-content { padding: 32px 0 32px 32px; }
+    .type-content h3 { font-size: 20px; font-weight: 800; color: #f1f5f9; margin-bottom: 8px; }
+    .type-content .type-sub { font-size: 14px; color: #8892a4; font-style: italic; margin-bottom: 14px; }
+    .type-content p { font-size: 14px; color: #cbd5e1; line-height: 1.65; margin-bottom: 16px; }
+    .type-features { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
+    .type-features li { font-size: 13.5px; color: #cbd5e1; display: flex; align-items: flex-start; gap: 8px; }
+    .type-features li::before { content: '→'; color: #a3e635; font-weight: 700; flex-shrink: 0; }
+    .type-price { display: inline-flex; align-items: center; gap: 8px; background: rgba(163,230,53,0.07); border: 1px solid rgba(163,230,53,0.15); border-radius: 8px; padding: 7px 14px; }
+    .type-price .price-from { font-size: 12px; color: #8892a4; }
+    .type-price .price-val { font-size: 15px; font-weight: 800; color: #a3e635; }
+    .type-price .price-note { font-size: 11px; color: #8892a4; }
+
+    /* Inclus dans chaque site */
+    .inclus-section { padding: 80px 0; background: linear-gradient(140deg, #06060c, #0f0f17); }
+    .inclus-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 48px; }
+    .inclus-item { text-align: center; padding: 28px 16px; }
+    .inclus-num { width: 44px; height: 44px; border-radius: 50%; background: rgba(163,230,53,0.1); border: 1.5px solid rgba(163,230,53,0.22); color: #a3e635; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+    .inclus-item h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .inclus-item p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.55; }
+
+    /* Comment ça se passe */
+    .process-sw { padding: 80px 0; background: #0f0f17; }
+    .process-sw-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 48px; position: relative; }
+    .process-sw-steps::before {
+        content: ''; position: absolute; top: 22px; left: 10%; right: 10%; height: 2px;
+        background: linear-gradient(90deg, transparent, #2a2a38, #2a2a38, transparent); z-index: 0;
+    }
+    .psw-step { text-align: center; position: relative; z-index: 1; }
+    .psw-num { width: 44px; height: 44px; border-radius: 50%; background: #a3e635; color: #0a0a12; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 0 0 4px rgba(163,230,53,0.15); }
+    .psw-step h4 { font-size: 13.5px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+    .psw-step p { font-size: 12.5px; color: #8892a4; line-height: 1.55; }
+
+    /* CTA */
+    .sw-cta { padding: 80px 0; background: #16161f; text-align: center; }
+    .sw-cta h2 { font-size: 36px; font-weight: 800; color: #f1f5f9; letter-spacing: -0.8px; margin-bottom: 14px; }
+    .sw-cta p { font-size: 16px; color: #8892a4; max-width: 480px; margin: 0 auto 32px; line-height: 1.65; }
+    .cta-secondary-link { display: inline-block; margin-top: 12px; font-size: 14px; color: #a3e635; font-weight: 600; }
+    .cta-secondary-link:hover { text-decoration: underline; }
+
+    @media (max-width: 900px) {
+        .pourquoi-grid { grid-template-columns: 1fr 1fr; }
+        .type-row, .type-row:nth-child(even) { grid-template-columns: 1fr; }
+        .type-row:nth-child(even) .type-visual { order: 0; }
+        .type-row:nth-child(even) .type-content { order: 0; padding: 24px 24px; }
+        .type-content { padding: 24px; }
+        .type-visual { border-right: none; border-bottom: 1px solid #2a2a38; }
+        .inclus-grid { grid-template-columns: 1fr 1fr; }
+        .process-sw-steps { grid-template-columns: 1fr 1fr; }
+        .process-sw-steps::before { display: none; }
+    }
+    @media (max-width: 600px) {
+        .siteweb-hero h1 { font-size: 34px; }
+        .pourquoi-grid { grid-template-columns: 1fr; }
+        .process-sw-steps { grid-template-columns: 1fr; }
+    }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Info<span>API</span></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- OVERLAY MENU -->
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-overlay-inner">
+            <ul class="overlay-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li>
+                    <button class="overlay-dd-trigger">Services <span class="ov-arrow">+</span></button>
+                    <ul class="overlay-sub">
+                        <li><a href="sites-web.html">Sites web</a></li>
+                        <li><a href="automatisation.html">Solutions sur mesure</a></li>
+                        <li><a href="services.html">Forfaits entreprise</a></li>
+                    </ul>
+                </li>
+                <li><a href="apropos.html">À propos</a></li>
+                <li><a href="projets.html">Projets</a></li>
+            </ul>
+            <a href="soumission.html" class="overlay-cta">Prendre RDV Gratuitement</a>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="siteweb-hero">
+        <div class="container">
+            <span class="section-tag" style="color:#a3e635;margin-bottom:14px;display:inline-block;">Sites web professionnels</span>
+            <h1>Votre présence en ligne,<br><span>enfin à votre image</span></h1>
+            <p>Un site web qui représente bien votre entreprise, qui donne confiance à vos clients et qui travaille pour vous 24h/24.</p>
+        </div>
+    </section>
+
+    <!-- POURQUOI UN SITE -->
+    <section class="pourquoi-section fade-section">
+        <div class="container">
+            <div style="text-align:center;max-width:560px;margin:0 auto 0;">
+                <span class="section-tag">Pourquoi c'est important</span>
+                <h2 class="section-header">Vos clients cherchent avant de vous appeler</h2>
+                <p class="section-sub">Sans présence en ligne, une grande partie de vos clients potentiels vous passent sous le nez.</p>
+            </div>
+            <div class="pourquoi-grid">
+                <div class="pq-card">
+
+                    <h3>Les gens cherchent en ligne d'abord</h3>
+                    <p>Avant de faire confiance à une entreprise, vos clients potentiels vérifient votre présence web.</p>
+                    <div class="pq-stat">97%</div>
+                    <p style="font-size:12px;color:#94a3b8;margin-top:4px;">des consommateurs cherchent localement en ligne avant d'acheter</p>
+                </div>
+                <div class="pq-card">
+
+                    <h3>Disponible 24h/24, 7j/7</h3>
+                    <p>Votre site répond aux questions, collecte des leads et présente vos services même quand vous dormez.</p>
+                    <div class="pq-stat">24/7</div>
+                    <p style="font-size:12px;color:#94a3b8;margin-top:4px;">sans que vous ayez à décrocher le téléphone</p>
+                </div>
+                <div class="pq-card">
+
+                    <h3>Première impression en 3 secondes</h3>
+                    <p>Un site professionnel rassure immédiatement. Un site amateur (ou absent) fait fuir.</p>
+                    <div class="pq-stat">3 sec</div>
+                    <p style="font-size:12px;color:#94a3b8;margin-top:4px;">le temps qu'un visiteur décide de rester ou partir</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TYPES DE SITES -->
+    <section class="types-section fade-section">
+        <div class="container">
+            <div style="text-align:center;max-width:600px;margin:0 auto 0;">
+                <span class="section-tag">Types de sites</span>
+                <h2 class="section-header">Quel type correspond à votre besoin?</h2>
+                <p class="section-sub">Chaque type de site a un objectif précis. Je vous guide vers le bon choix.</p>
+            </div>
+            <div class="types-grid">
+
+                <!-- Vitrine -->
+                <div class="type-row">
+                    <div class="type-visual">
+                        <div class="img-ph" style="width:100%;height:120px;border-radius:8px;margin-bottom:14px;">
+                            <div class="img-ph-icon"></div>
+                            <span class="img-ph-label">Capture d'écran</span>
+                        </div>
+                        <div class="type-visual-name">Site vitrine</div>
+                        <span class="type-badge">Le plus populaire</span>
+                    </div>
+                    <div class="type-content">
+                        <h3>Site vitrine corporatif</h3>
+                        <p class="type-sub">Idéal pour: entrepreneurs, PME, professionnels de service</p>
+                        <p>Votre carte de visite numérique. Présente qui vous êtes, ce que vous faites, comment vous contacter. Simple, professionnel, efficace.</p>
+                        <ul class="type-features">
+                            <li>Page d'accueil, À propos, Services, Contact</li>
+                            <li>Formulaire de contact ou de soumission</li>
+                            <li>Adapté mobile et rapide à charger</li>
+                            <li>Optimisé pour Google (SEO local)</li>
+                        </ul>
+                        <div class="type-price">
+                            <span class="price-from">À partir de</span>
+                            <span class="price-val">699$</span>
+                            <span class="price-note">livraison 2–3 semaines</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant -->
+                <div class="type-row">
+                    <div class="type-visual">
+                        <div class="img-ph" style="width:100%;height:120px;border-radius:8px;margin-bottom:14px;">
+                            <div class="img-ph-icon"></div>
+                            <span class="img-ph-label">Capture d'écran</span>
+                        </div>
+                        <div class="type-visual-name">Restaurant / Café</div>
+                        <span class="type-badge">Spécialisé</span>
+                    </div>
+                    <div class="type-content">
+                        <h3>Site pour restaurant ou café</h3>
+                        <p class="type-sub">Idéal pour: restaurants, brasseries, cafés, traiteurs</p>
+                        <p>Menu en ligne, réservations, horaires — tout ce qu'un client cherche avant de venir. Conçu pour donner envie et faciliter la décision.</p>
+                        <ul class="type-features">
+                            <li>Menu en ligne mis à jour facilement</li>
+                            <li>Système de réservation en ligne</li>
+                            <li>Galerie de photos et ambiance</li>
+                            <li>Intégration Google Maps et horaires</li>
+                        </ul>
+                        <div class="type-price">
+                            <span class="price-from">À partir de</span>
+                            <span class="price-val">899$</span>
+                            <span class="price-note">livraison 2–4 semaines</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Landing page -->
+                <div class="type-row">
+                    <div class="type-visual">
+                        <div class="img-ph" style="width:100%;height:120px;border-radius:8px;margin-bottom:14px;">
+                            <div class="img-ph-icon"></div>
+                            <span class="img-ph-label">Capture d'écran</span>
+                        </div>
+                        <div class="type-visual-name">Landing page</div>
+                        <span class="type-badge">Conversion</span>
+                    </div>
+                    <div class="type-content">
+                        <h3>Page de vente ou de capture</h3>
+                        <p class="type-sub">Idéal pour: promotions, campagnes publicitaires, offres spéciales</p>
+                        <p>Une seule page, un seul objectif : convaincre le visiteur d'agir. Conçue pour maximiser les conversions sur une publicité Facebook ou Google.</p>
+                        <ul class="type-features">
+                            <li>Structure psychologique de vente éprouvée</li>
+                            <li>Formulaire de capture ou achat intégré</li>
+                            <li>Chargement ultra-rapide pour les publicités</li>
+                            <li>Suivi de performance (conversions)</li>
+                        </ul>
+                        <div class="type-price">
+                            <span class="price-from">À partir de</span>
+                            <span class="price-val">499$</span>
+                            <span class="price-note">livraison 1–2 semaines</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- E-commerce -->
+                <div class="type-row">
+                    <div class="type-visual">
+                        <div class="img-ph" style="width:100%;height:120px;border-radius:8px;margin-bottom:14px;">
+                            <div class="img-ph-icon"></div>
+                            <span class="img-ph-label">Capture d'écran</span>
+                        </div>
+                        <div class="type-visual-name">Boutique en ligne</div>
+                        <span class="type-badge">E-commerce</span>
+                    </div>
+                    <div class="type-content">
+                        <h3>Boutique e-commerce</h3>
+                        <p class="type-sub">Idéal pour: boutiques, artisans, créateurs, détaillants</p>
+                        <p>Vendez vos produits en ligne avec un système de paiement sécurisé, gestion des stocks et commandes. Votre boutique ouverte à toute heure.</p>
+                        <ul class="type-features">
+                            <li>Catalogue de produits avec photos et descriptions</li>
+                            <li>Paiement sécurisé (Stripe, PayPal)</li>
+                            <li>Gestion des commandes et des stocks</li>
+                            <li>Confirmation par courriel automatique</li>
+                        </ul>
+                        <div class="type-price">
+                            <span class="price-from">À partir de</span>
+                            <span class="price-val">1 499$</span>
+                            <span class="price-note">livraison 4–6 semaines</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Site informatif -->
+                <div class="type-row">
+                    <div class="type-visual">
+                        <div class="img-ph" style="width:100%;height:120px;border-radius:8px;margin-bottom:14px;">
+                            <div class="img-ph-icon"></div>
+                            <span class="img-ph-label">Capture d'écran</span>
+                        </div>
+                        <div class="type-visual-name">Site informatif</div>
+                        <span class="type-badge">Contenu</span>
+                    </div>
+                    <div class="type-content">
+                        <h3>Site de contenu ou informatif</h3>
+                        <p class="type-sub">Idéal pour: cliniques, avocats, conseillers, associations</p>
+                        <p>Informez vos clients, partagez votre expertise, répondez aux questions fréquentes avant même qu'elles soient posées.</p>
+                        <ul class="type-features">
+                            <li>Structure claire avec sections de contenu</li>
+                            <li>FAQ intégrée pour réduire les appels</li>
+                            <li>Blog ou section actualités (optionnel)</li>
+                            <li>Formulaire de prise de rendez-vous</li>
+                        </ul>
+                        <div class="type-price">
+                            <span class="price-from">À partir de</span>
+                            <span class="price-val">799$</span>
+                            <span class="price-note">livraison 2–3 semaines</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interne -->
+                <div class="type-row">
+                    <div class="type-visual">
+                        <div class="img-ph" style="width:100%;height:120px;border-radius:8px;margin-bottom:14px;">
+                            <div class="img-ph-icon"></div>
+                            <span class="img-ph-label">Capture d'écran</span>
+                        </div>
+                        <div class="type-visual-name">Outil interne</div>
+                        <span class="type-badge">Sur mesure</span>
+                    </div>
+                    <div class="type-content">
+                        <h3>Application ou outil interne</h3>
+                        <p class="type-sub">Idéal pour: équipes, gestionnaires, entreprises avec processus complexes</p>
+                        <p>Un portail privé pour votre équipe : tableau de bord, gestion de projets, suivi des employés ou des clients — selon vos besoins.</p>
+                        <ul class="type-features">
+                            <li>Accès sécurisé avec connexion par employé</li>
+                            <li>Tableau de bord personnalisé</li>
+                            <li>Gestion de données et de formulaires</li>
+                            <li>Interface simple, conçue pour l'usage quotidien</li>
+                        </ul>
+                        <div class="type-price">
+                            <span class="price-from">Sur devis</span>
+                            <span class="price-val">1 999$+</span>
+                            <span class="price-note">selon la complexité</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- INCLUS DANS CHAQUE SITE -->
+    <section class="inclus-section fade-section">
+        <div class="container">
+            <div style="text-align:center;max-width:560px;margin:0 auto 0;">
+                <span class="section-tag" style="color:#a3e635;">Inclus par défaut</span>
+                <h2 class="section-header" style="color:#fff;">Ce que vous obtenez toujours</h2>
+                <p class="section-sub" style="color:rgba(255,255,255,0.6);">Sans supplément, sans surprise.</p>
+            </div>
+            <div class="inclus-grid">
+                <div class="inclus-item">
+                    <div class="inclus-num">01</div>
+                    <h4>Adapté mobile</h4>
+                    <p>Parfait sur téléphone, tablette et ordinateur. Aucun compromis visuel.</p>
+                </div>
+                <div class="inclus-item">
+                    <div class="inclus-num">02</div>
+                    <h4>Chargement rapide</h4>
+                    <p>Code optimisé pour un chargement en moins de 2 secondes. Google apprécie ça.</p>
+                </div>
+                <div class="inclus-item">
+                    <div class="inclus-num">03</div>
+                    <h4>SEO de base</h4>
+                    <p>Balises, descriptions, structure — les fondations pour que Google vous trouve.</p>
+                </div>
+                <div class="inclus-item">
+                    <div class="inclus-num">04</div>
+                    <h4>Certificat SSL</h4>
+                    <p>Connexion sécurisée (cadenas dans le navigateur). Obligatoire pour la confiance.</p>
+                </div>
+                <div class="inclus-item">
+                    <div class="inclus-num">05</div>
+                    <h4>Révisions incluses</h4>
+                    <p>2 rondes de révisions comprises dans le prix. On ajuste jusqu'à ce que ce soit parfait.</p>
+                </div>
+                <div class="inclus-item">
+                    <div class="inclus-num">06</div>
+                    <h4>Guide de mise à jour</h4>
+                    <p>Vous recevez un document simple pour modifier votre contenu vous-même si vous le souhaitez.</p>
+                </div>
+                <div class="inclus-item">
+                    <div class="inclus-num">07</div>
+                    <h4>Tests complets</h4>
+                    <p>Testé sur les navigateurs principaux et plusieurs tailles d'écran avant la livraison.</p>
+                </div>
+                <div class="inclus-item">
+                    <div class="inclus-num">08</div>
+                    <h4>Support post-livraison</h4>
+                    <p>30 jours de support inclus après la mise en ligne pour les ajustements mineurs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMMENT ÇA SE PASSE -->
+    <section class="process-sw fade-section">
+        <div class="container">
+            <div style="text-align:center;max-width:560px;margin:0 auto 0;">
+                <span class="section-tag">Mon processus</span>
+                <h2 class="section-header">De l'idée à la mise en ligne</h2>
+            </div>
+            <div class="process-sw-steps">
+                <div class="psw-step">
+                    <div class="psw-num">1</div>
+                    <h4>Soumission</h4>
+                    <p>Vous décrivez votre projet. Je reviens avec une recommandation et un devis.</p>
+                </div>
+                <div class="psw-step">
+                    <div class="psw-num">2</div>
+                    <h4>Maquette</h4>
+                    <p>Je crée une maquette visuelle pour valider la direction avant de coder.</p>
+                </div>
+                <div class="psw-step">
+                    <div class="psw-num">3</div>
+                    <h4>Développement</h4>
+                    <p>Je code votre site. Vous avez un aperçu en cours de route.</p>
+                </div>
+                <div class="psw-step">
+                    <div class="psw-num">4</div>
+                    <h4>Révisions</h4>
+                    <p>Vous ajustez, je modifie. On valide ensemble que tout est parfait.</p>
+                </div>
+                <div class="psw-step">
+                    <div class="psw-num">5</div>
+                    <h4>Mise en ligne</h4>
+                    <p>Je déploie votre site et je m'assure que tout fonctionne en production.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="sw-cta fade-section">
+        <div class="container">
+            <span class="section-tag">Commencer</span>
+            <h2>Vous savez quel type vous correspond?</h2>
+            <p>Dites-moi votre besoin en quelques lignes. Je vous reviens avec une recommandation personnalisée et un prix — gratuitement.</p>
+            <a href="soumission.html" class="btn-primary">Demander ma soumission gratuite →</a>
+            <br>
+            <a href="services.html" class="cta-secondary-link">Voir les forfaits mensuels →</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Info-API — Nicolas Caron | Laval, Québec</p>
+            <p><a href="mailto:nicocaron26@gmail.com">nicocaron26@gmail.com</a> | <a href="tel:4383665758">438-366-5758</a></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

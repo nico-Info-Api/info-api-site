@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test palettes — Info-API</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #18181b; }
+
+    /* ── Sélecteur de palette ── */
+    .switcher {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+        background: rgba(0,0,0,0.88); backdrop-filter: blur(12px);
+        display: flex; align-items: center; gap: 8px; padding: 10px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        flex-wrap: wrap;
+    }
+    .palette { padding-top: 80px; }
+    .switcher span { color: rgba(255,255,255,0.4); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-right: 4px; white-space: nowrap; }
+    .sw-btn {
+        padding: 7px 18px; border-radius: 100px; border: 1.5px solid rgba(255,255,255,0.18);
+        background: transparent; color: rgba(255,255,255,0.6); font-family: inherit;
+        font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .sw-btn:hover { border-color: rgba(255,255,255,0.45); color: #fff; }
+    .sw-btn.active { background: #fff; color: #000; border-color: #fff; }
+
+    .palette { display: none; padding-top: 60px; }
+    .palette.active { display: block; }
+
+    /* ── Réutilisables ── */
+    .pal-hero { padding: 88px 0 72px; text-align: center; }
+    .pal-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; margin-bottom: 18px; }
+    .pal-hero h1 { font-size: 48px; font-weight: 800; letter-spacing: -1.8px; line-height: 1.05; margin-bottom: 16px; color: #fff; }
+    .pal-hero h1 span { display: block; }
+    .pal-hero p { font-size: 16px; color: rgba(255,255,255,0.55); max-width: 440px; margin: 0 auto 32px; line-height: 1.65; }
+    .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .pal-btn { display: inline-block; padding: 13px 28px; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; font-family: inherit; text-decoration: none; transition: transform 0.15s, box-shadow 0.2s; }
+    .pal-btn:hover { transform: translateY(-2px); }
+    .pal-btn-ghost { display: inline-block; padding: 13px 28px; border-radius: 9px; font-size: 14px; font-weight: 700; font-family: inherit; background: transparent; border: 1.5px solid rgba(255,255,255,0.22); color: rgba(255,255,255,0.75); text-decoration: none; transition: border-color 0.2s; }
+    .pal-btn-ghost:hover { border-color: rgba(255,255,255,0.55); color: #fff; }
+
+    .pal-section { padding: 64px 0; }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+    .s-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+    .s-title { font-size: 34px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 8px; }
+    .s-sub { font-size: 15px; opacity: 0.5; max-width: 400px; line-height: 1.6; margin-bottom: 40px; }
+
+    /* Navbar preview */
+    .nav-bar { display: flex; align-items: center; gap: 28px; padding: 14px 24px; border-radius: 12px; border: 1.5px solid; margin-bottom: 48px; }
+    .nav-logo { font-size: 19px; font-weight: 800; }
+    .nav-items { display: flex; gap: 24px; margin-left: auto; }
+    .nav-items a { font-size: 13.5px; font-weight: 500; opacity: 0.55; text-decoration: none; color: inherit; }
+    .nav-rdv { padding: 8px 18px; border-radius: 7px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+
+    /* Cartes services */
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 40px; }
+    .pc { border-radius: 16px; padding: 26px 22px; border: 1.5px solid; transition: transform 0.2s; cursor: default; }
+    .pc:hover { transform: translateY(-4px); }
+    .pc-icon { font-size: 28px; margin-bottom: 12px; }
+    .pc-title { font-size: 16px; font-weight: 700; margin-bottom: 7px; }
+    .pc-text { font-size: 13.5px; opacity: 0.55; line-height: 1.6; margin-bottom: 14px; }
+    .pc-link { font-size: 13px; font-weight: 700; }
+
+    /* Image placeholder (quadrillé) */
+    .img-placeholder {
+        border-radius: 14px; overflow: hidden; position: relative;
+        display: flex; align-items: center; justify-content: center;
+        min-height: 200px; border: 2px dashed;
+    }
+    .img-placeholder-bg {
+        position: absolute; inset: 0;
+        background-image: linear-gradient(45deg, rgba(128,128,128,0.06) 25%, transparent 25%),
+                          linear-gradient(-45deg, rgba(128,128,128,0.06) 25%, transparent 25%),
+                          linear-gradient(45deg, transparent 75%, rgba(128,128,128,0.06) 75%),
+                          linear-gradient(-45deg, transparent 75%, rgba(128,128,128,0.06) 75%);
+        background-size: 24px 24px;
+        background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
+    }
+    .img-placeholder-label { position: relative; z-index: 1; font-size: 12px; font-weight: 600; opacity: 0.4; letter-spacing: 1px; text-transform: uppercase; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+    .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+
+    /* Bande stat (dark) */
+    .stat-band { padding: 56px 0; }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; border-radius: 16px; overflow: hidden; }
+    .stat-item { padding: 28px 20px; text-align: center; background: rgba(255,255,255,0.03); }
+    .stat-val { font-size: 38px; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 5px; }
+    .stat-lbl { font-size: 12.5px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+
+    /* Codes hex */
+    .hex-strip { display: flex; gap: 9px; flex-wrap: wrap; padding-top: 32px; }
+    .hc { display: flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 100px; font-size: 11.5px; font-weight: 600; border: 1px solid; }
+    .hd { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.12); }
+
+    /* =====================================================
+       P1 — MINUIT & CRÈME   hero:#0d1b2a  page:#fdf6ec  accent:#1e40af
+    ===================================================== */
+    #p1 .pal-hero      { background: linear-gradient(150deg,#07111e 0%,#0d1b2a 55%,#152640 100%); }
+    #p1 .pal-tag       { background: rgba(96,165,250,0.13); color: #60a5fa; }
+    #p1 .pal-hero h1 span { color: #60a5fa; }
+    #p1 .pal-btn       { background: #1e40af; color: #fff; box-shadow: 0 4px 16px rgba(30,64,175,0.38); }
+    #p1 .pal-section   { background: #fdf6ec; color: #1a2332; }
+    #p1 .s-label       { color: #1e40af; }
+    #p1 .s-title       { color: #1a2332; }
+    #p1 .nav-bar       { background: #fff; border-color: #e5d9c6; color: #1a2332; }
+    #p1 .nav-logo span { color: #1e40af; }
+    #p1 .nav-rdv       { background: #1e40af; color: #fff; }
+    #p1 .pc            { background: #fff; border-color: #e5d9c6; color: #1a2332; }
+    #p1 .pc-link       { color: #1e40af; }
+    #p1 .img-placeholder { border-color: #d4c5a9; color: #1a2332; }
+    #p1 .stat-band     { background: linear-gradient(135deg, #0d1b2a, #152640); }
+    #p1 .stat-val      { color: #60a5fa; }
+    #p1 .hc            { background: #f5efe3; border-color: #ddd0bc; color: #1a2332; }
+
+    /* =====================================================
+       P2 — CHARBON & IVOIRE   hero:#18181b  page:#faf7f2  accent:#6366f1
+    ===================================================== */
+    #p2 .pal-hero      { background: linear-gradient(150deg,#0e0e12 0%,#18181b 55%,#212126 100%); }
+    #p2 .pal-tag       { background: rgba(99,102,241,0.14); color: #a5b4fc; }
+    #p2 .pal-hero h1 span { color: #a5b4fc; }
+    #p2 .pal-btn       { background: #6366f1; color: #fff; box-shadow: 0 4px 16px rgba(99,102,241,0.38); }
+    #p2 .pal-section   { background: #faf7f2; color: #18181b; }
+    #p2 .s-label       { color: #6366f1; }
+    #p2 .s-title       { color: #18181b; }
+    #p2 .nav-bar       { background: #fff; border-color: #e8e2d8; color: #18181b; }
+    #p2 .nav-logo span { color: #6366f1; }
+    #p2 .nav-rdv       { background: #6366f1; color: #fff; }
+    #p2 .pc            { background: #fff; border-color: #e8e2d8; color: #18181b; }
+    #p2 .pc-link       { color: #6366f1; }
+    #p2 .img-placeholder { border-color: #d0c8bc; color: #18181b; }
+    #p2 .stat-band     { background: linear-gradient(135deg, #18181b, #212126); }
+    #p2 .stat-val      { color: #a5b4fc; }
+    #p2 .hc            { background: #eeead8; border-color: #d8d0be; color: #18181b; }
+
+    /* =====================================================
+       P3 — SAPIN & CRÈME      hero:#0a2318  page:#f9f6ef  accent:#059669
+    ===================================================== */
+    #p3 .pal-hero      { background: linear-gradient(150deg,#060e0a 0%,#0a2318 55%,#0f3322 100%); }
+    #p3 .pal-tag       { background: rgba(5,150,105,0.16); color: #6ee7b7; }
+    #p3 .pal-hero h1 span { color: #34d399; }
+    #p3 .pal-btn       { background: #059669; color: #fff; box-shadow: 0 4px 16px rgba(5,150,105,0.38); }
+    #p3 .pal-section   { background: #f9f6ef; color: #0f1e15; }
+    #p3 .s-label       { color: #059669; }
+    #p3 .s-title       { color: #0f1e15; }
+    #p3 .nav-bar       { background: #fff; border-color: #cddfc6; color: #0f1e15; }
+    #p3 .nav-logo span { color: #059669; }
+    #p3 .nav-rdv       { background: #059669; color: #fff; }
+    #p3 .pc            { background: #fff; border-color: #cddfc6; color: #0f1e15; }
+    #p3 .pc-link       { color: #059669; }
+    #p3 .img-placeholder { border-color: #b8d4af; color: #0f1e15; }
+    #p3 .stat-band     { background: linear-gradient(135deg, #0a2318, #0f3322); }
+    #p3 .stat-val      { color: #34d399; }
+    #p3 .hc            { background: #edf5e8; border-color: #c0d8b6; color: #0f1e15; }
+
+    /* =====================================================
+       P4 — ENCRE & CRÈME DORÉE   hero:#13111c  page:#fdf7ec  accent:#7c3aed
+    ===================================================== */
+    #p4 .pal-hero      { background: linear-gradient(150deg,#0c0a14 0%,#13111c 55%,#1c1828 100%); }
+    #p4 .pal-tag       { background: rgba(124,58,237,0.14); color: #c4b5fd; }
+    #p4 .pal-hero h1 span { color: #a78bfa; }
+    #p4 .pal-btn       { background: #7c3aed; color: #fff; box-shadow: 0 4px 16px rgba(124,58,237,0.38); }
+    #p4 .pal-section   { background: #fdf7ec; color: #1a1628; }
+    #p4 .s-label       { color: #7c3aed; }
+    #p4 .s-title       { color: #1a1628; }
+    #p4 .nav-bar       { background: #fff; border-color: #e0d4b8; color: #1a1628; }
+    #p4 .nav-logo span { color: #7c3aed; }
+    #p4 .nav-rdv       { background: #7c3aed; color: #fff; }
+    #p4 .pc            { background: #fff; border-color: #e0d4b8; color: #1a1628; }
+    #p4 .pc-link       { color: #7c3aed; }
+    #p4 .img-placeholder { border-color: #cec098; color: #1a1628; }
+    #p4 .stat-band     { background: linear-gradient(135deg, #13111c, #1c1828); }
+    #p4 .stat-val      { color: #a78bfa; }
+    #p4 .hc            { background: #f5edda; border-color: #d8ccaa; color: #1a1628; }
+
+    /* =====================================================
+       P5 — MINÉRAL & TURQUOISE   hero:#0B1220→#102A43  page:#fff  accent:#0D9488
+    ===================================================== */
+    #p5 .pal-hero      { background: linear-gradient(150deg,#060c16 0%,#0b1220 55%,#102a43 100%); }
+    #p5 .pal-tag       { background: rgba(13,148,136,0.16); color: #5eead4; }
+    #p5 .pal-hero h1 span { color: #5eead4; }
+    #p5 .pal-btn       { background: #0d9488; color: #fff; box-shadow: 0 4px 16px rgba(13,148,136,0.38); }
+    #p5 .pal-section   { background: #fff; color: #0f172a; }
+    #p5 .s-label       { color: #0d9488; }
+    #p5 .s-title       { color: #0f172a; }
+    #p5 .nav-bar       { background: #fff; border-color: #b2ece8; color: #0f172a; }
+    #p5 .nav-logo span { color: #0d9488; }
+    #p5 .nav-rdv       { background: #0d9488; color: #fff; }
+    #p5 .pc            { background: #e2f8f5; border-color: #b2ece8; color: #0f172a; }
+    #p5 .pc-link       { color: #0d9488; }
+    #p5 .img-placeholder { border-color: #99e0d8; color: #0f172a; }
+    #p5 .stat-band     { background: linear-gradient(135deg, #0b1220, #102a43); }
+    #p5 .stat-val      { color: #5eead4; }
+    #p5 .hc            { background: #e2f8f5; border-color: #a0ddd8; color: #0f172a; }
+
+    /* =====================================================
+       P6 — SLATE & BLEU   hero:#0F172A  page:#F8FAFC  accent:#2563EB
+    ===================================================== */
+    #p6 .pal-hero      { background: linear-gradient(150deg,#080d15 0%,#0f172a 55%,#1e2a40 100%); }
+    #p6 .pal-tag       { background: rgba(37,99,235,0.14); color: #60a5fa; }
+    #p6 .pal-hero h1 span { color: #60a5fa; }
+    #p6 .pal-btn       { background: #2563eb; color: #fff; box-shadow: 0 4px 16px rgba(37,99,235,0.38); }
+    #p6 .pal-section   { background: #f8fafc; color: #0f172a; }
+    #p6 .s-label       { color: #2563eb; }
+    #p6 .s-title       { color: #0f172a; }
+    #p6 .nav-bar       { background: #fff; border-color: #e2e8f0; color: #0f172a; }
+    #p6 .nav-logo span { color: #2563eb; }
+    #p6 .nav-rdv       { background: #2563eb; color: #fff; }
+    #p6 .pc            { background: #fff; border-color: #e2e8f0; color: #0f172a; }
+    #p6 .pc-link       { color: #2563eb; }
+    #p6 .img-placeholder { border-color: #c7d6f0; color: #0f172a; }
+    #p6 .stat-band     { background: linear-gradient(135deg, #0f172a, #1e2a40); }
+    #p6 .stat-val      { color: #60a5fa; }
+    #p6 .hc            { background: #eef2fb; border-color: #c8d4ee; color: #0f172a; }
+
+    /* =====================================================
+       P7 — ESPACE FONCÉ   fond:#080D1A  hero:#04070F  accent:#4F9CF9
+    ===================================================== */
+    #p7 .pal-hero      { background: linear-gradient(150deg,#020408 0%,#04070f 55%,#080d1a 100%); }
+    #p7 .pal-tag       { background: rgba(79,156,249,0.14); color: #a5f3fc; }
+    #p7 .pal-hero h1 span { color: #a5f3fc; }
+    #p7 .pal-btn       { background: #4f9cf9; color: #04070f; box-shadow: 0 4px 16px rgba(79,156,249,0.38); }
+    #p7 .pal-btn-ghost { border-color: rgba(165,243,252,0.25); color: rgba(165,243,252,0.8); }
+    #p7 .pal-section   { background: #080d1a; color: #e2e8f0; }
+    #p7 .s-label       { color: #4f9cf9; }
+    #p7 .s-title       { color: #e2e8f0; }
+    #p7 .nav-bar       { background: #0d1424; border-color: #1e293b; color: #e2e8f0; }
+    #p7 .nav-logo span { color: #4f9cf9; }
+    #p7 .nav-rdv       { background: #4f9cf9; color: #04070f; }
+    #p7 .pc            { background: #0d1424; border-color: #1e293b; color: #e2e8f0; }
+    #p7 .pc-link       { color: #4f9cf9; }
+    #p7 .img-placeholder { border-color: #1e293b; color: #e2e8f0; }
+    #p7 .stat-band     { background: linear-gradient(135deg, #04070f, #080d1a); }
+    #p7 .stat-val      { color: #a5f3fc; }
+    #p7 .hc            { background: #0d1424; border-color: #1e293b; color: #94a3b8; }
+
+    /* =====================================================
+       P8 — BLANC ARCHITECTURAL   fond:#fff  section:#F8FAFC  accent:#3B82F6
+    ===================================================== */
+    #p8 .pal-hero      { background: linear-gradient(150deg,#0a0c10 0%,#111827 55%,#1e2637 100%); }
+    #p8 .pal-tag       { background: rgba(59,130,246,0.12); color: #60a5fa; }
+    #p8 .pal-hero h1 span { color: #93c5fd; }
+    #p8 .pal-btn       { background: #111827; color: #fff; box-shadow: 0 4px 16px rgba(17,24,39,0.38); }
+    #p8 .pal-section   { background: #ffffff; color: #334155; }
+    #p8 .s-label       { color: #3b82f6; }
+    #p8 .s-title       { color: #111827; }
+    #p8 .nav-bar       { background: #fff; border-color: #e2e8f0; color: #334155; }
+    #p8 .nav-logo span { color: #3b82f6; }
+    #p8 .nav-rdv       { background: #111827; color: #fff; }
+    #p8 .pc            { background: #f8fafc; border-color: #e2e8f0; color: #334155; }
+    #p8 .pc-link       { color: #3b82f6; }
+    #p8 .img-placeholder { border-color: #cbd5e1; color: #334155; }
+    #p8 .stat-band     { background: linear-gradient(135deg, #111827, #1e2637); }
+    #p8 .stat-val      { color: #93c5fd; }
+    #p8 .hc            { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
+
+    /* =====================================================
+       P9 — ANTHRACITE & CITRON   fond:#0F0F17  hero:#0A0A12  accent:#A3E635
+    ===================================================== */
+    #p9 .pal-hero      { background: linear-gradient(150deg,#06060b 0%,#0a0a12 55%,#0f0f17 100%); }
+    #p9 .pal-tag       { background: rgba(163,230,53,0.14); color: #bef264; }
+    #p9 .pal-hero h1 span { color: #a3e635; }
+    #p9 .pal-btn       { background: #a3e635; color: #0a0a12; box-shadow: 0 4px 16px rgba(163,230,53,0.32); }
+    #p9 .pal-btn-ghost { border-color: rgba(163,230,53,0.3); color: rgba(163,230,53,0.85); }
+    #p9 .pal-section   { background: #0f0f17; color: #f1f5f9; }
+    #p9 .s-label       { color: #a3e635; }
+    #p9 .s-title       { color: #f1f5f9; }
+    #p9 .nav-bar       { background: #16161f; border-color: #2a2a38; color: #f1f5f9; }
+    #p9 .nav-logo span { color: #a3e635; }
+    #p9 .nav-rdv       { background: #a3e635; color: #0a0a12; }
+    #p9 .pc            { background: #16161f; border-color: #2a2a38; color: #f1f5f9; }
+    #p9 .pc-link       { color: #a3e635; }
+    #p9 .img-placeholder { border-color: #2a2a38; color: #f1f5f9; }
+    #p9 .stat-band     { background: linear-gradient(135deg, #0a0a12, #0f0f17); }
+    #p9 .stat-val      { color: #a3e635; }
+    #p9 .hc            { background: #16161f; border-color: #2a2a38; color: #94a3b8; }
+
+    /* =====================================================
+       PA (10) — FORÊT ÉLECTRIQUE
+       Fond vert-noir #081009 | citron #a3e635 | pont #4ade80
+       Petite touche crème #fefce8 sur 1 badge uniquement
+    ===================================================== */
+    #p10 .pal-hero     { background: linear-gradient(150deg,#030805 0%,#071309 55%,#0c1f0e 100%); }
+    #p10 .pal-tag      { background: rgba(163,230,53,0.13); color: #bef264; }
+    #p10 .pal-hero h1 span { color: #a3e635; }
+    #p10 .pal-btn      { background: #a3e635; color: #030805; box-shadow: 0 4px 18px rgba(163,230,53,0.35); }
+    #p10 .pal-btn-ghost { border-color: rgba(163,230,53,0.28); color: rgba(163,230,53,0.8); }
+    #p10 .pal-section  { background: #081009; color: #f0fdf4; }
+    #p10 .s-label      { color: #a3e635; }
+    #p10 .s-title      { color: #f0fdf4; }
+    #p10 .nav-bar      { background: #0c1810; border-color: #1e3320; color: #f0fdf4; }
+    #p10 .nav-logo span { color: #a3e635; }
+    #p10 .nav-rdv      { background: #a3e635; color: #050e06; }
+    #p10 .pc           { background: #0f1b11; border-color: #1e3320; color: #f0fdf4; }
+    #p10 .pc-link      { color: #4ade80; }
+    #p10 .img-placeholder { border-color: #1e3320; color: #4ade80; }
+    #p10 .stat-band    { background: linear-gradient(135deg, #050d06, #0c1f0e); }
+    #p10 .stat-val     { color: #a3e635; }
+    #p10 .hc           { background: #0f1b11; border-color: #1e3320; color: #86efac; }
+
+    /* =====================================================
+       PB (11) — ANTHRACITE BOISÉ
+       Fond anthracite teinté #0a100b | lime naturel #84cc16 | forêt #22c55e
+       1 petite touche crème sur stat badge seulement
+    ===================================================== */
+    #p11 .pal-hero     { background: linear-gradient(150deg,#060c07 0%,#0a1009 55%,#0e1a0e 100%); }
+    #p11 .pal-tag      { background: rgba(132,204,22,0.14); color: #bef264; }
+    #p11 .pal-hero h1 span { color: #84cc16; }
+    #p11 .pal-btn      { background: #84cc16; color: #060c07; box-shadow: 0 4px 18px rgba(132,204,22,0.35); }
+    #p11 .pal-btn-ghost { border-color: rgba(132,204,22,0.28); color: rgba(190,242,100,0.8); }
+    #p11 .pal-section  { background: #0a100b; color: #f1f5f9; }
+    #p11 .s-label      { color: #84cc16; }
+    #p11 .s-title      { color: #f1f5f9; }
+    #p11 .nav-bar      { background: #111a12; border-color: #223822; color: #f1f5f9; }
+    #p11 .nav-logo span { color: #84cc16; }
+    #p11 .nav-rdv      { background: #84cc16; color: #060c07; }
+    #p11 .pc           { background: #131e14; border-color: #223822; color: #f1f5f9; }
+    #p11 .pc-link      { color: #22c55e; }
+    #p11 .img-placeholder { border-color: #223822; color: #22c55e; }
+    #p11 .stat-band    { background: linear-gradient(135deg, #060c07, #0e1a0e); }
+    #p11 .stat-val     { color: #84cc16; }
+    #p11 .hc           { background: #131e14; border-color: #223822; color: #86efac; }
+
+    /* =====================================================
+       PC (12) — LIME & OMBRE
+       Fond quasi-noir #060c08 | lime lumineux #bef264 | sapin riche #166534
+       Crème ultra-discrète #fefce8 sur 1 élément clé seulement
+    ===================================================== */
+    #p12 .pal-hero     { background: linear-gradient(150deg,#020504 0%,#060c08 55%,#09150a 100%); }
+    #p12 .pal-tag      { background: rgba(190,242,100,0.12); color: #d9f99d; }
+    #p12 .pal-hero h1 span { color: #bef264; }
+    #p12 .pal-btn      { background: #bef264; color: #020504; box-shadow: 0 4px 18px rgba(190,242,100,0.3); }
+    #p12 .pal-btn-ghost { border-color: rgba(190,242,100,0.25); color: rgba(190,242,100,0.8); }
+    #p12 .pal-section  { background: #060c08; color: #f9fafb; }
+    #p12 .s-label      { color: #bef264; }
+    #p12 .s-title      { color: #f9fafb; }
+    #p12 .nav-bar      { background: #0b1a0d; border-color: #1a3320; color: #f9fafb; }
+    #p12 .nav-logo span { color: #bef264; }
+    #p12 .nav-rdv      { background: #bef264; color: #020504; }
+    #p12 .pc           { background: #0c1a0e; border-color: #1a3320; color: #f9fafb; }
+    #p12 .pc-link      { color: #4ade80; }
+    /* Petite touche crème sur la carte centrale uniquement */
+    #p12 .pc:nth-child(2) { background: #fefce8; border-color: #d9f99d; color: #0c1a0e; }
+    #p12 .pc:nth-child(2) .pc-link { color: #166534; }
+    #p12 .img-placeholder { border-color: #1a3320; color: #4ade80; }
+    #p12 .stat-band    { background: linear-gradient(135deg, #020504, #09150a); }
+    #p12 .stat-val     { color: #bef264; }
+    #p12 .hc           { background: #0c1a0e; border-color: #1a3320; color: #86efac; }
+
+    /* =====================================================
+       P13 — CITRON POUDRÉ  (pastel)
+       fond #f9fef0  accent lime pâle #d9f99d  olive foncé #4d7c0f
+    ===================================================== */
+    #p13 .pal-hero     { background: linear-gradient(150deg,#030605 0%,#06100a 55%,#0b1d0e 100%); }
+    #p13 .pal-tag      { background: rgba(217,249,157,0.16); color: #d9f99d; }
+    #p13 .pal-hero h1 span { color: #d9f99d; }
+    #p13 .pal-btn      { background: #d9f99d; color: #1a2e1c; box-shadow: 0 4px 18px rgba(217,249,157,0.3); }
+    #p13 .pal-btn-ghost { border-color: rgba(217,249,157,0.28); color: rgba(217,249,157,0.8); }
+    #p13 .pal-section  { background: #f9fef0; color: #1a2e1c; }
+    #p13 .s-label      { color: #4d7c0f; }
+    #p13 .s-title      { color: #1a2e1c; }
+    #p13 .nav-bar      { background: #fff; border-color: #e0f5b0; color: #1a2e1c; }
+    #p13 .nav-logo span { color: #4d7c0f; }
+    #p13 .nav-rdv      { background: #4d7c0f; color: #fff; }
+    #p13 .pc           { background: #fff; border-color: #d9f99d; color: #1a2e1c; }
+    #p13 .pc-link      { color: #4d7c0f; }
+    #p13 .img-placeholder { border-color: #c6e89c; color: #4d7c0f; }
+    #p13 .stat-band    { background: linear-gradient(135deg, #030605, #0b1d0e); }
+    #p13 .stat-val     { color: #d9f99d; }
+    #p13 .hc           { background: #f0fce8; border-color: #c6e89c; color: #1a2e1c; }
+
+    /* =====================================================
+       P14 — MENTHE FRAÎCHE  (pastel)
+       fond #f0fdf7  menthe #6ee7b7  émeraude #059669
+    ===================================================== */
+    #p14 .pal-hero     { background: linear-gradient(150deg,#030a06 0%,#06130a 55%,#0a2015 100%); }
+    #p14 .pal-tag      { background: rgba(110,231,183,0.16); color: #a7f3d0; }
+    #p14 .pal-hero h1 span { color: #6ee7b7; }
+    #p14 .pal-btn      { background: #6ee7b7; color: #064e3b; box-shadow: 0 4px 18px rgba(110,231,183,0.32); }
+    #p14 .pal-btn-ghost { border-color: rgba(110,231,183,0.28); color: rgba(110,231,183,0.8); }
+    #p14 .pal-section  { background: #f0fdf7; color: #064e3b; }
+    #p14 .s-label      { color: #059669; }
+    #p14 .s-title      { color: #064e3b; }
+    #p14 .nav-bar      { background: #fff; border-color: #a7f3d0; color: #064e3b; }
+    #p14 .nav-logo span { color: #059669; }
+    #p14 .nav-rdv      { background: #059669; color: #fff; }
+    #p14 .pc           { background: #fff; border-color: #d1fae5; color: #064e3b; }
+    #p14 .pc-link      { color: #059669; }
+    #p14 .img-placeholder { border-color: #a7f3d0; color: #059669; }
+    #p14 .stat-band    { background: linear-gradient(135deg, #030a06, #0a2015); }
+    #p14 .stat-val     { color: #6ee7b7; }
+    #p14 .hc           { background: #e8fdf2; border-color: #99e8c8; color: #064e3b; }
+
+    /* =====================================================
+       P15 — LIN & LIME  (pastel)
+       fond #fafdf5  lime #bef264  vert citron foncé #65a30d
+    ===================================================== */
+    #p15 .pal-hero     { background: linear-gradient(150deg,#040805 0%,#08130a 55%,#0f1f0f 100%); }
+    #p15 .pal-tag      { background: rgba(190,242,100,0.14); color: #bef264; }
+    #p15 .pal-hero h1 span { color: #bef264; }
+    #p15 .pal-btn      { background: #bef264; color: #0c1a07; box-shadow: 0 4px 18px rgba(190,242,100,0.3); }
+    #p15 .pal-btn-ghost { border-color: rgba(190,242,100,0.28); color: rgba(190,242,100,0.8); }
+    #p15 .pal-section  { background: #fafdf5; color: #1c2e12; }
+    #p15 .s-label      { color: #65a30d; }
+    #p15 .s-title      { color: #1c2e12; }
+    #p15 .nav-bar      { background: #fff; border-color: #ecfccb; color: #1c2e12; }
+    #p15 .nav-logo span { color: #65a30d; }
+    #p15 .nav-rdv      { background: #65a30d; color: #fff; }
+    #p15 .pc           { background: #fefff8; border-color: #d9f99d; color: #1c2e12; }
+    #p15 .pc-link      { color: #65a30d; }
+    #p15 .img-placeholder { border-color: #d9f99d; color: #65a30d; }
+    #p15 .stat-band    { background: linear-gradient(135deg, #040805, #0f1f0f); }
+    #p15 .stat-val     { color: #bef264; }
+    #p15 .hc           { background: #f2fde0; border-color: #cce8a0; color: #1c2e12; }
+
+    /* =====================================================
+       P16 — SAUGE & BRUME  (pastel)
+       fond #f4f7f4  sauge doux #34d399  émeraude moyen #10b981
+    ===================================================== */
+    #p16 .pal-hero     { background: linear-gradient(150deg,#050a06 0%,#091409 55%,#0e2010 100%); }
+    #p16 .pal-tag      { background: rgba(52,211,153,0.16); color: #6ee7b7; }
+    #p16 .pal-hero h1 span { color: #34d399; }
+    #p16 .pal-btn      { background: #34d399; color: #022c22; box-shadow: 0 4px 18px rgba(52,211,153,0.3); }
+    #p16 .pal-btn-ghost { border-color: rgba(52,211,153,0.28); color: rgba(52,211,153,0.8); }
+    #p16 .pal-section  { background: #f4f7f4; color: #1a2e1c; }
+    #p16 .s-label      { color: #10b981; }
+    #p16 .s-title      { color: #1a2e1c; }
+    #p16 .nav-bar      { background: #fff; border-color: #b3f0d0; color: #1a2e1c; }
+    #p16 .nav-logo span { color: #10b981; }
+    #p16 .nav-rdv      { background: #10b981; color: #fff; }
+    #p16 .pc           { background: #fff; border-color: #c8f0dc; color: #1a2e1c; }
+    #p16 .pc-link      { color: #10b981; }
+    #p16 .img-placeholder { border-color: #b3f0d0; color: #10b981; }
+    #p16 .stat-band    { background: linear-gradient(135deg, #050a06, #0e2010); }
+    #p16 .stat-val     { color: #34d399; }
+    #p16 .hc           { background: #eaf8f2; border-color: #a0dfc4; color: #1a2e1c; }
+    </style>
+</head>
+<body>
+
+<!-- SÉLECTEUR -->
+<div class="switcher">
+    <span>Palette :</span>
+    <button class="sw-btn active" onclick="show(1)">1 — Minuit & Crème</button>
+    <button class="sw-btn" onclick="show(2)">2 — Charbon & Ivoire</button>
+    <button class="sw-btn" onclick="show(3)">3 — Sapin & Crème</button>
+    <button class="sw-btn" onclick="show(4)">4 — Encre & Crème dorée</button>
+    <button class="sw-btn" onclick="show(5)">5 — Minéral & Turquoise</button>
+    <button class="sw-btn" onclick="show(6)">6 — Slate & Bleu</button>
+    <button class="sw-btn" onclick="show(7)">7 — Espace Foncé</button>
+    <button class="sw-btn" onclick="show(8)">8 — Blanc Architectural</button>
+    <button class="sw-btn" onclick="show(9)">9 — Anthracite & Citron</button>
+    <span style="color:rgba(255,255,255,0.2);margin:0 4px">|</span>
+    <button class="sw-btn" style="border-color:rgba(163,230,53,0.4);color:#a3e635" onclick="show(10)">✦ A — Forêt Électrique</button>
+    <button class="sw-btn" style="border-color:rgba(132,204,22,0.4);color:#84cc16" onclick="show(11)">✦ B — Anthracite Boisé</button>
+    <button class="sw-btn" style="border-color:rgba(190,242,100,0.4);color:#bef264" onclick="show(12)">✦ C — Lime & Ombre</button>
+    <span style="color:rgba(255,255,255,0.2);margin:0 4px">|</span>
+    <button class="sw-btn" style="border-color:rgba(217,249,157,0.5);color:#c6e89c" onclick="show(13)">☁ D — Citron Poudré</button>
+    <button class="sw-btn" style="border-color:rgba(110,231,183,0.5);color:#9fdfc4" onclick="show(14)">☁ E — Menthe Fraîche</button>
+    <button class="sw-btn" style="border-color:rgba(190,242,100,0.5);color:#b5dba0" onclick="show(15)">☁ F — Lin & Lime</button>
+    <button class="sw-btn" style="border-color:rgba(52,211,153,0.5);color:#7fc8a8" onclick="show(16)">☁ G — Sauge & Brume</button>
+</div>
+
+<!-- ═══════════════ PALETTE 1 ═══════════════ -->
+<div class="palette active" id="p1">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div>
+                    <div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo du projet ici</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">⚙️</div>
+                    <div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration ici</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div>
+                    <div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe ici</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#0d1b2a"></div>#0d1b2a Hero</div>
+                <div class="hc"><div class="hd" style="background:#fdf6ec;border:1px solid #bbb"></div>#fdf6ec Crème</div>
+                <div class="hc"><div class="hd" style="background:#1e40af"></div>#1e40af Bleu</div>
+                <div class="hc"><div class="hd" style="background:#60a5fa"></div>#60a5fa Accent</div>
+                <div class="hc"><div class="hd" style="background:#1a2332"></div>#1a2332 Texte</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE 2 ═══════════════ -->
+<div class="palette" id="p2">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div>
+                    <div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo du projet ici</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">⚙️</div>
+                    <div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration ici</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div>
+                    <div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe ici</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#18181b"></div>#18181b Charbon</div>
+                <div class="hc"><div class="hd" style="background:#faf7f2;border:1px solid #bbb"></div>#faf7f2 Ivoire</div>
+                <div class="hc"><div class="hd" style="background:#6366f1"></div>#6366f1 Indigo</div>
+                <div class="hc"><div class="hd" style="background:#a5b4fc"></div>#a5b4fc Lavande</div>
+                <div class="hc"><div class="hd" style="background:#18181b"></div>#18181b Texte</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE 3 ═══════════════ -->
+<div class="palette" id="p3">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div>
+                    <div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo du projet ici</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">⚙️</div>
+                    <div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration ici</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div>
+                    <div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe ici</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#0a2318"></div>#0a2318 Forêt</div>
+                <div class="hc"><div class="hd" style="background:#f9f6ef;border:1px solid #bbb"></div>#f9f6ef Crème</div>
+                <div class="hc"><div class="hd" style="background:#059669"></div>#059669 Émeraude</div>
+                <div class="hc"><div class="hd" style="background:#34d399"></div>#34d399 Vert clair</div>
+                <div class="hc"><div class="hd" style="background:#0f1e15"></div>#0f1e15 Texte</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE 4 ═══════════════ -->
+<div class="palette" id="p4">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div>
+                    <div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo du projet ici</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">⚙️</div>
+                    <div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration ici</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div>
+                    <div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe ici</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#13111c"></div>#13111c Encre</div>
+                <div class="hc"><div class="hd" style="background:#fdf7ec;border:1px solid #bbb"></div>#fdf7ec Crème dorée</div>
+                <div class="hc"><div class="hd" style="background:#7c3aed"></div>#7c3aed Violet</div>
+                <div class="hc"><div class="hd" style="background:#a78bfa"></div>#a78bfa Lavande</div>
+                <div class="hc"><div class="hd" style="background:#1a1628"></div>#1a1628 Texte</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE 5 — MINÉRAL & TURQUOISE ═══════════════ -->
+<div class="palette" id="p5">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc"><div class="pc-icon">🌐</div><div class="pc-title">Sites web</div><div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div><div class="pc-link">En savoir plus →</div></div>
+                <div class="pc"><div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div><div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div><div class="pc-link">En savoir plus →</div></div>
+                <div class="pc"><div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div><div class="pc-text">Maintenance, support prioritaire et développement continu.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div><div class="pc-link">Voir les forfaits →</div></div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#0b1220"></div>#0B1220→#102A43 Hero</div>
+                <div class="hc"><div class="hd" style="background:#ffffff;border:1px solid #bbb"></div>#FFFFFF Fond</div>
+                <div class="hc"><div class="hd" style="background:#0d9488"></div>#0D9488 Teal</div>
+                <div class="hc"><div class="hd" style="background:#5eead4"></div>#5EEAD4 Accent</div>
+                <div class="hc"><div class="hd" style="background:#e2f8f5;border:1px solid #bbb"></div>#E2F8F5 Sec.</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE 6 — SLATE & BLEU ═══════════════ -->
+<div class="palette" id="p6">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc"><div class="pc-icon">🌐</div><div class="pc-title">Sites web</div><div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div><div class="pc-link">En savoir plus →</div></div>
+                <div class="pc"><div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div><div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div><div class="pc-link">En savoir plus →</div></div>
+                <div class="pc"><div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div><div class="pc-text">Maintenance, support prioritaire et développement continu.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div><div class="pc-link">Voir les forfaits →</div></div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#0f172a"></div>#0F172A Hero</div>
+                <div class="hc"><div class="hd" style="background:#f8fafc;border:1px solid #bbb"></div>#F8FAFC Fond</div>
+                <div class="hc"><div class="hd" style="background:#2563eb"></div>#2563EB Bleu</div>
+                <div class="hc"><div class="hd" style="background:#60a5fa"></div>#60A5FA Accent</div>
+                <div class="hc"><div class="hd" style="background:#ffffff;border:1px solid #bbb"></div>#FFF Cartes</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE 7 — ESPACE FONCÉ ═══════════════ -->
+<div class="palette" id="p7">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc"><div class="pc-icon">🌐</div><div class="pc-title">Sites web</div><div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div><div class="pc-link">En savoir plus →</div></div>
+                <div class="pc"><div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div><div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div><div class="pc-link">En savoir plus →</div></div>
+                <div class="pc"><div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div><div class="pc-text">Maintenance, support prioritaire et développement continu.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div><div class="pc-link">Voir les forfaits →</div></div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#04070f"></div>#04070F Hero</div>
+                <div class="hc"><div class="hd" style="background:#080d1a"></div>#080D1A Fond</div>
+                <div class="hc"><div class="hd" style="background:#4f9cf9"></div>#4F9CF9 Bleu</div>
+                <div class="hc"><div class="hd" style="background:#a5f3fc"></div>#A5F3FC Cyan</div>
+                <div class="hc"><div class="hd" style="background:#1e293b"></div>#1E293B Bordures</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE 8 — BLANC ARCHITECTURAL ═══════════════ -->
+<div class="palette" id="p8">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc"><div class="pc-icon">🌐</div><div class="pc-title">Sites web</div><div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div><div class="pc-link">En savoir plus →</div></div>
+                <div class="pc"><div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div><div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div><div class="pc-link">En savoir plus →</div></div>
+                <div class="pc"><div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div><div class="pc-text">Maintenance, support prioritaire et développement continu.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div><div class="pc-link">Voir les forfaits →</div></div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#111827"></div>#111827 Primaire</div>
+                <div class="hc"><div class="hd" style="background:#ffffff;border:1px solid #bbb"></div>#FFF Fond</div>
+                <div class="hc"><div class="hd" style="background:#f8fafc;border:1px solid #bbb"></div>#F8FAFC Section</div>
+                <div class="hc"><div class="hd" style="background:#3b82f6"></div>#3B82F6 Accent</div>
+                <div class="hc"><div class="hd" style="background:#e2e8f0;border:1px solid #bbb"></div>#E2E8F0 Gris</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE 9 — ANTHRACITE & CITRON ═══════════════ -->
+<div class="palette" id="p9">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc"><div class="pc-icon">🌐</div><div class="pc-title">Sites web</div><div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div><div class="pc-link">En savoir plus →</div></div>
+                <div class="pc"><div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div><div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div><div class="pc-link">En savoir plus →</div></div>
+                <div class="pc"><div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div><div class="pc-text">Maintenance, support prioritaire et développement continu.</div><div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div><div class="pc-link">Voir les forfaits →</div></div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#0a0a12"></div>#0A0A12 Hero</div>
+                <div class="hc"><div class="hd" style="background:#0f0f17"></div>#0F0F17 Fond</div>
+                <div class="hc"><div class="hd" style="background:#a3e635"></div>#A3E635 Citron</div>
+                <div class="hc"><div class="hd" style="background:#fbbf24"></div>#FBBF24 Ambre</div>
+                <div class="hc"><div class="hd" style="background:#f1f5f9;border:1px solid #bbb"></div>#F1F5F9 Texte</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE A (10) — FORÊT ÉLECTRIQUE ═══════════════
+     Citron électrique sur noir vert-teinté. Pont #4ade80 entre sapin et lime.
+     Crème #fefce8 = 0 sauf sur badge "Le plus populaire" type accent.
+══════════════════════════════════════════════════════════════════ -->
+<div class="palette" id="p10">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div><div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc" style="border-color:#a3e635;box-shadow:0 0 0 1px rgba(163,230,53,0.15)">
+                    <div style="position:relative">
+                        <span style="position:absolute;top:-38px;left:50%;transform:translateX(-50%);background:#a3e635;color:#030805;font-size:11px;font-weight:800;padding:3px 12px;border-radius:100px;white-space:nowrap">⭐ Le plus demandé</span>
+                    </div>
+                    <div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#071309"></div>#071309 Fond</div>
+                <div class="hc"><div class="hd" style="background:#a3e635"></div>#A3E635 Citron</div>
+                <div class="hc"><div class="hd" style="background:#4ade80"></div>#4ADE80 Pont forêt</div>
+                <div class="hc"><div class="hd" style="background:#0f1b11"></div>#0F1B11 Cartes</div>
+                <div class="hc"><div class="hd" style="background:#f0fdf4;border:1px solid #aaa"></div>#F0FDF4 Texte</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE B (11) — ANTHRACITE BOISÉ ═══════════════
+     Lime plus naturel/mat #84cc16 sur anthracite vert-teinté.
+     Forêt #22c55e comme couleur de lien/accent secondaire.
+     Balance entre sapin et anthracite — ni trop froid ni trop électrique.
+══════════════════════════════════════════════════════════════════ -->
+<div class="palette" id="p11">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div><div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc" style="border-color:#84cc16;box-shadow:0 0 0 1px rgba(132,204,22,0.12)">
+                    <div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <!-- Petite touche crème : 1 badge spécial uniquement -->
+            <div style="margin-top:28px;display:inline-flex;align-items:center;gap:10px;background:#fef9c3;border:1px solid #d9f99d;border-radius:10px;padding:10px 18px">
+                <span style="font-size:13px;font-weight:700;color:#365314">✦ Touche crème sur badge/highlight seulement — tout le reste reste sombre</span>
+            </div>
+            <div class="hex-strip" style="margin-top:16px">
+                <div class="hc"><div class="hd" style="background:#0a100b"></div>#0A100B Fond</div>
+                <div class="hc"><div class="hd" style="background:#84cc16"></div>#84CC16 Lime mat</div>
+                <div class="hc"><div class="hd" style="background:#22c55e"></div>#22C55E Forêt lien</div>
+                <div class="hc"><div class="hd" style="background:#131e14"></div>#131E14 Cartes</div>
+                <div class="hc"><div class="hd" style="background:#fef9c3;border:1px solid #aaa"></div>#FEF9C3 Crème badge</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE C (12) — LIME & OMBRE ═══════════════
+     Fond le plus sombre. Lime #bef264 très pop contre le noir.
+     Sapin riche #166534 pour les sections secondaires / profondeur.
+     1 seule carte crème #fefce8 (la centrale "featured") — le reste full dark.
+══════════════════════════════════════════════════════════════════ -->
+<div class="palette" id="p12">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div><div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <!-- Carte centrale : 1 touche crème #fefce8 -->
+                <div class="pc">
+                    <div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <!-- Section sapin riche comme "bande intermédiaire" -->
+            <div style="background:#166534;border-radius:16px;padding:28px 32px;margin-bottom:24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+                <div style="text-align:center"><div style="font-size:32px;font-weight:800;color:#bef264;letter-spacing:-1px">28+</div><div style="font-size:12px;color:rgba(255,255,255,0.6)">Fichiers développés</div></div>
+                <div style="text-align:center"><div style="font-size:32px;font-weight:800;color:#bef264;letter-spacing:-1px">24h</div><div style="font-size:12px;color:rgba(255,255,255,0.6)">Délai de réponse</div></div>
+                <div style="text-align:center"><div style="font-size:32px;font-weight:800;color:#bef264;letter-spacing:-1px">100%</div><div style="font-size:12px;color:rgba(255,255,255,0.6)">Autonome</div></div>
+            </div>
+            <div style="font-size:12px;color:#4ade80;font-weight:600;margin-bottom:8px">↑ Le sapin riche #166534 utilisé comme section intermédiaire (pas comme fond global)</div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#060c08"></div>#060C08 Fond</div>
+                <div class="hc"><div class="hd" style="background:#bef264"></div>#BEF264 Lime vif</div>
+                <div class="hc"><div class="hd" style="background:#166534"></div>#166534 Sapin section</div>
+                <div class="hc"><div class="hd" style="background:#0c1a0e"></div>#0C1A0E Cartes</div>
+                <div class="hc"><div class="hd" style="background:#fefce8;border:1px solid #aaa"></div>#FEFCE8 Crème (1 carte)</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE D (13) — CITRON POUDRÉ (pastel) ═══════════════ -->
+<div class="palette" id="p13">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div><div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#f9fef0;border:1px solid #aaa"></div>#F9FEF0 Fond</div>
+                <div class="hc"><div class="hd" style="background:#d9f99d"></div>#D9F99D Lime poudré</div>
+                <div class="hc"><div class="hd" style="background:#4d7c0f"></div>#4D7C0F Olive foncé</div>
+                <div class="hc"><div class="hd" style="background:#fff;border:1px solid #aaa"></div>#FFFFFF Cartes</div>
+                <div class="hc"><div class="hd" style="background:#1a2e1c"></div>#1A2E1C Texte</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE E (14) — MENTHE FRAÎCHE (pastel) ═══════════════ -->
+<div class="palette" id="p14">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div><div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#f0fdf7;border:1px solid #aaa"></div>#F0FDF7 Fond</div>
+                <div class="hc"><div class="hd" style="background:#6ee7b7"></div>#6EE7B7 Menthe</div>
+                <div class="hc"><div class="hd" style="background:#059669"></div>#059669 Émeraude</div>
+                <div class="hc"><div class="hd" style="background:#fff;border:1px solid #aaa"></div>#FFFFFF Cartes</div>
+                <div class="hc"><div class="hd" style="background:#064e3b"></div>#064E3B Texte</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE F (15) — LIN & LIME (pastel) ═══════════════ -->
+<div class="palette" id="p15">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div><div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#fafdf5;border:1px solid #aaa"></div>#FAFDF5 Fond lin</div>
+                <div class="hc"><div class="hd" style="background:#bef264"></div>#BEF264 Lime doux</div>
+                <div class="hc"><div class="hd" style="background:#65a30d"></div>#65A30D Citron foncé</div>
+                <div class="hc"><div class="hd" style="background:#fefff8;border:1px solid #aaa"></div>#FEFFF8 Cartes</div>
+                <div class="hc"><div class="hd" style="background:#1c2e12"></div>#1C2E12 Texte</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ PALETTE G (16) — SAUGE & BRUME (pastel) ═══════════════ -->
+<div class="palette" id="p16">
+    <div class="pal-hero">
+        <div class="container">
+            <span class="pal-tag">Solutions sur mesure</span>
+            <h1>Votre présence en ligne,<span>enfin professionnelle</span></h1>
+            <p>Sites web et solutions sur mesure pour PME et entrepreneurs à Laval.</p>
+            <div class="btn-row">
+                <a class="pal-btn">Prendre RDV gratuitement</a>
+                <a class="pal-btn-ghost">Voir les projets</a>
+            </div>
+        </div>
+    </div>
+    <div class="pal-section">
+        <div class="container">
+            <div class="nav-bar">
+                <div class="nav-logo">Info<span>API</span></div>
+                <div class="nav-items"><a>Accueil</a><a>Services</a><a>À propos</a><a>Projets</a></div>
+                <span class="nav-rdv">Prendre RDV</span>
+            </div>
+            <div class="s-label">Ce que je fais</div>
+            <div class="s-title">Mes services</div>
+            <div class="s-sub">Deux expertises, un seul interlocuteur à Laval.</div>
+            <div class="cards">
+                <div class="pc">
+                    <div class="pc-icon">🌐</div><div class="pc-title">Sites web</div>
+                    <div class="pc-text">Vitrine, restaurant, e-commerce — votre présence en ligne professionnelle.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo projet</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">⚙️</div><div class="pc-title">Solutions sur mesure</div>
+                    <div class="pc-text">Automatisations et intégrations qui éliminent vos tâches répétitives.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Illustration</span></div>
+                    <div class="pc-link">En savoir plus →</div>
+                </div>
+                <div class="pc">
+                    <div class="pc-icon">📋</div><div class="pc-title">Forfaits mensuels</div>
+                    <div class="pc-text">Maintenance, support prioritaire et développement continu.</div>
+                    <div class="img-placeholder" style="margin-bottom:12px;min-height:120px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo équipe</span></div>
+                    <div class="pc-link">Voir les forfaits →</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Photo à propos / bureau</span></div>
+                <div class="img-placeholder" style="min-height:220px"><div class="img-placeholder-bg"></div><span class="img-placeholder-label">Screenshot projet client</span></div>
+            </div>
+            <div class="hex-strip">
+                <div class="hc"><div class="hd" style="background:#f4f7f4;border:1px solid #aaa"></div>#F4F7F4 Fond brume</div>
+                <div class="hc"><div class="hd" style="background:#34d399"></div>#34D399 Sauge vif</div>
+                <div class="hc"><div class="hd" style="background:#10b981"></div>#10B981 Émeraude</div>
+                <div class="hc"><div class="hd" style="background:#fff;border:1px solid #aaa"></div>#FFFFFF Cartes</div>
+                <div class="hc"><div class="hd" style="background:#1a2e1c"></div>#1A2E1C Texte</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-val">28+</div><div class="stat-lbl">Fichiers développés</div></div>
+                <div class="stat-item"><div class="stat-val">3–10h</div><div class="stat-lbl">Récupérées / semaine</div></div>
+                <div class="stat-item"><div class="stat-val">24h</div><div class="stat-lbl">Délai de réponse</div></div>
+                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Livraison autonome</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function show(n) {
+    document.querySelectorAll('.palette').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('p' + n).classList.add('active');
+    document.querySelectorAll('.sw-btn')[n - 1].classList.add('active');
+}
+</script>
+</body>
+</html>

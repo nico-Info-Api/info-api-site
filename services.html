@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Services Info-API : création de sites web et automatisation sur mesure pour PME et entrepreneurs à Laval.">
+    <title>Services | Info-API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+
+    /* ── HERO ── */
+    .services-hero {
+        padding: 148px 0 96px;
+        background: linear-gradient(140deg, #06060c 0%, #0a0a12 48%, #0f0f17 100%);
+        text-align: center; position: relative; overflow: hidden;
+    }
+    .services-hero::before {
+        content: ''; position: absolute; top: -20%; right: -5%;
+        width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(163,230,53,0.07) 0%, transparent 65%);
+        pointer-events: none;
+    }
+    .services-hero .container { position: relative; z-index: 1; }
+    .services-hero h1 {
+        font-size: 52px; font-weight: 800; color: #fff;
+        letter-spacing: -2px; margin-bottom: 18px; line-height: 1.05;
+    }
+    .services-hero h1 span { color: #a3e635; }
+    .services-hero p {
+        font-size: 18px; color: rgba(255,255,255,0.55);
+        max-width: 540px; margin: 0 auto; line-height: 1.65;
+    }
+
+    /* ── SECTION GÉNÉRIQUE ── */
+    .srv-section { padding: 88px 0; }
+    .srv-section.bg-light { background: #16161f; }
+    .srv-section.bg-dark  { background: linear-gradient(140deg, #06060c 0%, #0a0a12 55%, #0f0f17 100%); }
+
+    /* ── TOGGLE MENSUEL / ANNUEL ── */
+    .price-toggle-wrap {
+        display: flex; align-items: center; justify-content: center;
+        gap: 14px; margin-bottom: 52px;
+    }
+    .price-toggle-label { font-size: 14px; font-weight: 600; color: #8892a4; }
+    .price-toggle-label.active { color: #f1f5f9; }
+    .toggle-switch {
+        width: 52px; height: 28px; background: #a3e635;
+        border-radius: 100px; position: relative; cursor: pointer;
+        border: none; transition: background 0.2s; flex-shrink: 0;
+    }
+    .toggle-switch::after {
+        content: ''; position: absolute;
+        width: 22px; height: 22px; background: #0a0a12;
+        border-radius: 50%; top: 3px; left: 3px;
+        transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    .toggle-switch.annual::after { transform: translateX(24px); }
+    .savings-tag {
+        background: rgba(163,230,53,0.1);
+        color: #a3e635;
+        border: 1px solid rgba(163,230,53,0.25);
+        font-size: 12px; font-weight: 700;
+        padding: 3px 10px; border-radius: 100px;
+        transition: opacity 0.2s;
+    }
+    .savings-tag.hidden { opacity: 0; pointer-events: none; }
+
+    /* ── FORFAITS GRID ── */
+    .forfaits-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        align-items: start;
+    }
+    .forfait-card {
+        background: #0f0f17;
+        border: 1.5px solid #2a2a38;
+        border-radius: 20px;
+        padding: 32px 26px;
+        position: relative;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .forfait-card:hover { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(0,0,0,0.35); border-color: rgba(163,230,53,0.25); }
+    .forfait-card.featured {
+        border-color: #a3e635;
+        box-shadow: 0 0 0 4px rgba(163,230,53,0.08);
+    }
+    .featured-tag {
+        position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+        background: linear-gradient(90deg, #a3e635, #bef264);
+        color: #0a0a12; font-size: 11px; font-weight: 700;
+        padding: 4px 14px; border-radius: 100px; white-space: nowrap;
+        box-shadow: 0 2px 10px rgba(163,230,53,0.3);
+    }
+    .forfait-nom { font-size: 14px; font-weight: 700; color: #8892a4; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
+    .forfait-prix { margin-bottom: 6px; }
+    .forfait-montant {
+        font-size: 38px; font-weight: 800; color: #f1f5f9;
+        letter-spacing: -1.5px; line-height: 1;
+    }
+    .forfait-montant sup { font-size: 18px; vertical-align: top; margin-top: 6px; display: inline-block; font-weight: 700; }
+    .forfait-periode { font-size: 13px; color: #8892a4; font-weight: 500; margin-bottom: 4px; }
+    .forfait-annuel-note { font-size: 12px; color: #a3e635; font-weight: 600; margin-bottom: 20px; min-height: 18px; }
+    .forfait-setup {
+        font-size: 12.5px; color: #8892a4;
+        background: #16161f; border-radius: 8px;
+        padding: 8px 12px; margin-bottom: 22px;
+        border: 1px solid #2a2a38;
+    }
+    .forfait-setup strong { color: #f1f5f9; }
+    .forfait-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .forfait-features li {
+        display: flex; align-items: flex-start; gap: 9px;
+        font-size: 13.5px; color: #cbd5e1; line-height: 1.45;
+    }
+    .forfait-features li::before {
+        content: '✓'; color: #a3e635; font-weight: 800;
+        font-size: 12px; flex-shrink: 0; margin-top: 1px;
+    }
+    .forfait-features li.disabled {
+        color: #3a3a50;
+    }
+    .forfait-features li.disabled::before { content: '—'; color: #3a3a50; font-weight: 400; }
+    .forfait-cta {
+        display: block; width: 100%; text-align: center;
+        padding: 12px 16px; border-radius: 10px;
+        font-size: 14px; font-weight: 700;
+        background: #16161f; color: #cbd5e1;
+        border: 1.5px solid #2a2a38;
+        transition: all 0.2s; cursor: pointer;
+        text-decoration: none;
+    }
+    .forfait-cta:hover { background: #1e1e2a; color: #f1f5f9; transform: translateY(-1px); }
+    .forfait-card.featured .forfait-cta {
+        background: #a3e635; color: #0a0a12; border-color: #a3e635;
+        box-shadow: 0 4px 16px rgba(163,230,53,0.32);
+    }
+    .forfait-card.featured .forfait-cta:hover { background: #bef264; }
+
+    /* ── À LA CARTE ── */
+    .carte-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        max-width: 820px;
+        margin: 0 auto;
+    }
+    .carte-item {
+        position: relative; overflow: hidden; border-radius: 16px;
+        min-height: 280px; padding: 0;
+        border: 1.5px solid rgba(163,230,53,0.12);
+        display: flex; flex-direction: column; justify-content: flex-end;
+        background: #0a0a12;
+        transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    }
+    .carte-item:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.45); border-color: rgba(163,230,53,0.3); }
+    .carte-item > img {
+        position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+        transition: transform 0.55s ease;
+    }
+    .carte-item:hover > img { transform: scale(1.04); }
+    .carte-item-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(10,10,18,0.05) 0%, rgba(10,10,18,0.72) 50%, rgba(10,10,18,0.97) 100%);
+    }
+    .carte-item-content { position: relative; z-index: 1; padding: 24px 26px 26px; }
+    .ci-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+    .carte-item h4 { font-size: 17px; font-weight: 700; color: #f1f5f9; }
+    .carte-prix-range { font-size: 14px; font-weight: 800; color: #a3e635; white-space: nowrap; }
+    .carte-item p { font-size: 13.5px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+    /* ── DISCLAIMER FORFAITS ── */
+    .forfait-note {
+        text-align: center; margin-top: 44px;
+        background: rgba(163,230,53,0.05);
+        border: 1.5px solid rgba(163,230,53,0.12);
+        border-radius: 14px; padding: 22px 32px; max-width: 700px; margin-left: auto; margin-right: auto;
+    }
+    .forfait-note p { font-size: 15px; color: #cbd5e1; line-height: 1.65; }
+    .forfait-note p strong { color: #f1f5f9; }
+    .forfait-note a { color: #a3e635; font-weight: 600; }
+
+    /* ── PROCESS 3 ÉTAPES ── */
+    .process-steps {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 0; position: relative; max-width: 840px; margin: 0 auto;
+    }
+    .process-step {
+        text-align: center; padding: 32px 28px; position: relative;
+    }
+    .process-step:not(:last-child)::after {
+        content: '→'; position: absolute; right: -10px; top: 50%;
+        transform: translateY(-50%); font-size: 22px; color: rgba(163,230,53,0.25);
+        font-weight: 300;
+    }
+    .step-num {
+        width: 48px; height: 48px; border-radius: 50%;
+        background: rgba(163,230,53,0.12); border: 1.5px solid rgba(163,230,53,0.28);
+        color: #a3e635; font-size: 18px; font-weight: 800;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 16px;
+    }
+    .process-step h4 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .process-step p  { font-size: 13.5px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+    /* ── CTA FINAL ── */
+    .cta-conseil {
+        text-align: center;
+        background: linear-gradient(140deg, #06060c 0%, #0a0a12 55%, #0f0f17 100%);
+        padding: 88px 0; position: relative; overflow: hidden;
+    }
+    .cta-conseil::before {
+        content: ''; position: absolute; top:-40%; left:50%; transform:translateX(-50%);
+        width: 700px; height: 700px;
+        background: radial-gradient(circle, rgba(163,230,53,0.08) 0%, transparent 65%);
+        pointer-events: none;
+    }
+    .cta-conseil .container { position: relative; z-index: 1; }
+    .cta-conseil h2 { font-size: 40px; font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 16px; }
+    .cta-conseil p  { font-size: 17px; color: rgba(255,255,255,0.55); max-width: 500px; margin: 0 auto 40px; line-height: 1.65; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) { .forfaits-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px)  {
+        .services-hero h1 { font-size: 36px; }
+        .services-duo { grid-template-columns: 1fr; }
+        .forfaits-grid { grid-template-columns: 1fr; }
+        .carte-grid { grid-template-columns: 1fr; }
+        .process-steps { grid-template-columns: 1fr; }
+        .process-step:not(:last-child)::after { content: '↓'; right: auto; top: auto; bottom: -14px; left: 50%; transform: translateX(-50%); }
+    }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Info<span>API</span></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- OVERLAY MENU -->
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-overlay-inner">
+            <ul class="overlay-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li>
+                    <button class="overlay-dd-trigger">Services <span class="ov-arrow">+</span></button>
+                    <ul class="overlay-sub">
+                        <li><a href="sites-web.html">Sites web</a></li>
+                        <li><a href="automatisation.html">Solutions sur mesure</a></li>
+                        <li><a href="services.html">Forfaits entreprise</a></li>
+                    </ul>
+                </li>
+                <li><a href="apropos.html">À propos</a></li>
+                <li><a href="projets.html">Projets</a></li>
+            </ul>
+            <a href="soumission.html" class="overlay-cta">Prendre RDV Gratuitement</a>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="services-hero">
+        <div class="container">
+            <span class="section-tag" style="color:#a3e635;margin-bottom:14px;display:inline-block;">Forfaits entreprise</span>
+            <h1>Un forfait qui <span>s'adapte à vous</span></h1>
+            <p>Hébergement, mises à jour, support et automatisation — tout inclus dans un seul forfait mensuel, sans surprise.</p>
+        </div>
+    </section>
+
+    <!-- FORFAITS -->
+    <section class="srv-section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Forfaits</span>
+                <h2>Une idée des options disponibles</h2>
+                <p class="section-sub">Ces forfaits sont une référence — pas une liste de prix fixe. Chaque projet est discuté ensemble pour trouver ce qui vous convient vraiment.</p>
+            </div>
+
+            <!-- Toggle mensuel / annuel -->
+            <div class="price-toggle-wrap">
+                <span class="price-toggle-label active" id="labelMensuel">Mensuel</span>
+                <button class="toggle-switch" id="priceToggle" aria-label="Changer période"></button>
+                <span class="price-toggle-label" id="labelAnnuel">Annuel</span>
+                <span class="savings-tag hidden" id="savingsTag">2 mois gratuits</span>
+            </div>
+
+            <div class="forfaits-grid">
+
+                <!-- PRÉSENCE -->
+                <div class="forfait-card fade-in">
+                    <div class="forfait-nom">Présence</div>
+                    <div class="forfait-prix">
+                        <div class="forfait-montant"><sup>$</sup><span class="prix-val" data-monthly="75" data-annual="60">75</span></div>
+                        <div class="forfait-periode">/mois</div>
+                    </div>
+                    <div class="forfait-annuel-note" id="note-presence"></div>
+                    <div class="forfait-setup">Mise en place : <strong>$499</strong> (une seule fois)</div>
+                    <ul class="forfait-features">
+                        <li>Site vitrine jusqu'à 4 pages</li>
+                        <li>Hébergement inclus</li>
+                        <li>Visible sur Google (SEO de base)</li>
+                        <li>Formulaire de contact</li>
+                        <li>1 modification par mois</li>
+                        <li class="disabled">Automatisation</li>
+                        <li class="disabled">Rapport mensuel</li>
+                    </ul>
+                    <a href="soumission.html" class="forfait-cta">Ce forfait m'intéresse →</a>
+                </div>
+
+                <!-- CROISSANCE -->
+                <div class="forfait-card fade-in">
+                    <div class="forfait-nom">Croissance</div>
+                    <div class="forfait-prix">
+                        <div class="forfait-montant"><sup>$</sup><span class="prix-val" data-monthly="149" data-annual="119">149</span></div>
+                        <div class="forfait-periode">/mois</div>
+                    </div>
+                    <div class="forfait-annuel-note" id="note-croissance"></div>
+                    <div class="forfait-setup">Mise en place : <strong>$799</strong> (une seule fois)</div>
+                    <ul class="forfait-features">
+                        <li>Site vitrine jusqu'à 6 pages</li>
+                        <li>Hébergement inclus</li>
+                        <li>SEO optimisé pour Google</li>
+                        <li>Formulaire intelligent</li>
+                        <li>Rapport mensuel de visites</li>
+                        <li>3 modifications par mois</li>
+                        <li class="disabled">Automatisation</li>
+                    </ul>
+                    <a href="soumission.html" class="forfait-cta">Ce forfait m'intéresse →</a>
+                </div>
+
+                <!-- ENTREPRISE -->
+                <div class="forfait-card featured fade-in">
+                    <div class="featured-tag">⭐ Le plus populaire</div>
+                    <div class="forfait-nom">Entreprise</div>
+                    <div class="forfait-prix">
+                        <div class="forfait-montant"><sup>$</sup><span class="prix-val" data-monthly="249" data-annual="199">249</span></div>
+                        <div class="forfait-periode">/mois</div>
+                    </div>
+                    <div class="forfait-annuel-note" id="note-entreprise"></div>
+                    <div class="forfait-setup">Mise en place : <strong>$1 199</strong> (une seule fois)</div>
+                    <ul class="forfait-features">
+                        <li>Site web complet 8+ pages</li>
+                        <li>Hébergement inclus</li>
+                        <li>SEO avancé</li>
+                        <li>Formulaire intelligent</li>
+                        <li>1 automatisation sur mesure</li>
+                        <li>Rapport mensuel détaillé</li>
+                        <li>5 modifications par mois</li>
+                    </ul>
+                    <a href="soumission.html" class="forfait-cta">Ce forfait m'intéresse →</a>
+                </div>
+
+                <!-- TOUT-INCLUS -->
+                <div class="forfait-card fade-in">
+                    <div class="forfait-nom">Tout-inclus</div>
+                    <div class="forfait-prix">
+                        <div class="forfait-montant"><sup>$</sup><span class="prix-val" data-monthly="399" data-annual="319">399</span></div>
+                        <div class="forfait-periode">/mois</div>
+                    </div>
+                    <div class="forfait-annuel-note" id="note-toutinclus"></div>
+                    <div class="forfait-setup">Mise en place : <strong>$1 999</strong> (une seule fois)</div>
+                    <ul class="forfait-features">
+                        <li>Site web avancé</li>
+                        <li>Hébergement inclus</li>
+                        <li>SEO avancé</li>
+                        <li>2+ automatisations sur mesure</li>
+                        <li>Base de données sur mesure</li>
+                        <li>Rapport mensuel détaillé</li>
+                        <li>Modifications illimitées</li>
+                    </ul>
+                    <a href="soumission.html" class="forfait-cta">Ce forfait m'intéresse →</a>
+                </div>
+
+            </div>
+
+            <div class="forfait-note">
+                <p>⚠️ <strong>Ces prix sont une référence, pas un tarif fixe.</strong> Chaque projet est différent — décrivez-moi votre besoin et je vous recommande ce qui correspond <em>vraiment</em> à votre situation. La soumission est <a href="soumission.html">gratuite et sans engagement</a>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- À LA CARTE -->
+    <section class="srv-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Sans abonnement</span>
+                <h2>Projets à la carte</h2>
+                <p class="section-sub">Vous avez un besoin précis et ponctuel? Pas besoin d'un forfait mensuel — on fait le projet, c'est tout.</p>
+            </div>
+            <div class="carte-grid fade-in">
+                <div class="carte-item">
+                    <img src="images/Template-responsive-design.png" alt="Site vitrine">
+                    <div class="carte-item-overlay"></div>
+                    <div class="carte-item-content">
+                        <div class="ci-top">
+                            <h4>Site vitrine</h4>
+                            <span class="carte-prix-range">$599 – $1 799</span>
+                        </div>
+                        <p>Site complet livré clé en main, hébergement inclus pour 1 an. Du simple 3 pages à un site professionnel complet.</p>
+                    </div>
+                </div>
+                <div class="carte-item">
+                    <img src="images/menu-site-web.png" alt="Site restaurant">
+                    <div class="carte-item-overlay"></div>
+                    <div class="carte-item-content">
+                        <div class="ci-top">
+                            <h4>Site restaurant</h4>
+                            <span class="carte-prix-range">$799 – $1 799</span>
+                        </div>
+                        <p>Menu en ligne, heures d'ouverture, formulaire de réservation. Vos clients trouvent tout en quelques secondes.</p>
+                    </div>
+                </div>
+                <div class="carte-item">
+                    <img src="images/script-auto.jpg" alt="Script d'automatisation">
+                    <div class="carte-item-overlay"></div>
+                    <div class="carte-item-content">
+                        <div class="ci-top">
+                            <h4>Script d'automatisation</h4>
+                            <span class="carte-prix-range">$199 – $1 499</span>
+                        </div>
+                        <p>Automatiser une tâche précise : rapports, envois d'emails, organisation de fichiers, connexion entre outils.</p>
+                    </div>
+                </div>
+                <div class="carte-item">
+                    <img src="images/Landing-Page-Examples.png" alt="Landing page">
+                    <div class="carte-item-overlay"></div>
+                    <div class="carte-item-content">
+                        <div class="ci-top">
+                            <h4>Landing page</h4>
+                            <span class="carte-prix-range">$349 – $599</span>
+                        </div>
+                        <p>Une page unique et percutante pour une promotion, un lancement ou une campagne. Livrée rapidement.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESSUS -->
+    <section class="srv-section bg-dark">
+        <div class="container">
+            <div class="section-header" style="margin-bottom:52px">
+                <span class="section-tag" style="color:#a3e635">Comment ça marche</span>
+                <h2 style="color:#fff">Simple, transparent, sans surprise</h2>
+            </div>
+            <div class="process-steps">
+                <div class="process-step fade-in">
+                    <div class="step-num">1</div>
+                    <h4>Vous me décrivez votre besoin</h4>
+                    <p>Remplissez le formulaire de soumission. Pas besoin de connaître la technique — décrivez juste votre situation en 2-3 phrases.</p>
+                </div>
+                <div class="process-step fade-in">
+                    <div class="step-num">2</div>
+                    <h4>Je vous conseille la bonne solution</h4>
+                    <p>Je reviens vers vous sous 24h avec une recommandation claire, un prix précis et un plan concret. Aucun engagement de votre côté.</p>
+                </div>
+                <div class="process-step fade-in">
+                    <div class="step-num">3</div>
+                    <h4>Je livre, vous approuvez</h4>
+                    <p>On s'entend sur les détails, je développe, vous voyez l'avancement. Rien n'est mis en ligne sans votre approbation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-conseil">
+        <div class="container">
+            <span class="section-tag" style="color:#a3e635;display:inline-block;margin-bottom:14px">Prochaine étape</span>
+            <h2>Pas sûr de ce qu'il vous faut?</h2>
+            <p>Décrivez-moi votre situation en quelques lignes. Je vous reviens sous 24h avec une recommandation gratuite et sans engagement.</p>
+            <a href="soumission.html" class="btn-primary">Obtenir mes recommandations gratuitement</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>© 2026 Info-API — Nicolas Caron | Laval, Québec</p>
+            <p><a href="mailto:nicocaron26@gmail.com">nicocaron26@gmail.com</a> | <a href="tel:4383665758">438-366-5758</a></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+    /* ── TOGGLE MENSUEL / ANNUEL ── */
+    const toggle = document.getElementById('priceToggle');
+    const labelM = document.getElementById('labelMensuel');
+    const labelA = document.getElementById('labelAnnuel');
+    const savingsTag = document.getElementById('savingsTag');
+    let isAnnual = false;
+
+    const annualNotes = {
+      'note-presence':  '$720/an — économisez $180',
+      'note-croissance':'$1 428/an — économisez $360',
+      'note-entreprise':'$2 388/an — économisez $600',
+      'note-toutinclus':'$3 828/an — économisez $960',
+    };
+
+    toggle.addEventListener('click', () => {
+        isAnnual = !isAnnual;
+        toggle.classList.toggle('annual', isAnnual);
+
+        labelM.classList.toggle('active', !isAnnual);
+        labelA.classList.toggle('active', isAnnual);
+        savingsTag.classList.toggle('hidden', !isAnnual);
+
+        document.querySelectorAll('.prix-val').forEach(el => {
+            const val = isAnnual ? el.dataset.annual : el.dataset.monthly;
+            el.textContent = val;
+        });
+
+        Object.entries(annualNotes).forEach(([id, note]) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = isAnnual ? note : '';
+        });
+    });
+    </script>
+</body>
+</html>

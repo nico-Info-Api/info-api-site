@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Demandez une soumission gratuite à Info-API — sites web et automatisation à Laval.">
+    <title>Soumission gratuite | Info-API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+    .soumission-hero {
+        padding: 148px 0 72px;
+        background: linear-gradient(140deg, #06060c 0%, #0a0a12 48%, #0f0f17 100%);
+        text-align: center; position: relative; overflow: hidden;
+    }
+    .soumission-hero::before {
+        content: ''; position: absolute; top: -20%; right: -5%;
+        width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(163,230,53,0.07) 0%, transparent 65%);
+        pointer-events: none;
+    }
+    .soumission-hero .container { position: relative; z-index: 1; }
+    .soumission-hero h1 { font-size: 48px; font-weight: 800; color: #fff; letter-spacing: -1.8px; margin-bottom: 16px; }
+    .soumission-hero h1 span { color: #a3e635; }
+    .soumission-hero p { font-size: 17px; color: rgba(255,255,255,0.55); max-width: 480px; margin: 0 auto; line-height: 1.65; }
+
+    /* Layout */
+    .soumission-body { padding: 64px 0 96px; background: #16161f; }
+    .soumission-grid {
+        display: grid; grid-template-columns: 1fr 380px; gap: 40px; align-items: start;
+    }
+
+    /* Formulaire */
+    .form-card {
+        background: #0f0f17; border: 1.5px solid #2a2a38;
+        border-radius: 22px; padding: 44px 40px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .form-card h2 { font-size: 22px; font-weight: 800; color: #f1f5f9; margin-bottom: 6px; letter-spacing: -0.4px; }
+    .form-card .form-sub { font-size: 14px; color: #8892a4; margin-bottom: 32px; line-height: 1.5; }
+    .form-group { margin-bottom: 22px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+    label { display: block; font-size: 13px; font-weight: 700; color: #cbd5e1; margin-bottom: 7px; letter-spacing: 0.2px; }
+    label .req { color: #a3e635; margin-left: 2px; }
+    label .opt { color: #8892a4; font-weight: 400; margin-left: 4px; font-size: 12px; }
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+        width: 100%; padding: 11px 14px;
+        border: 1.5px solid #2a2a38; border-radius: 10px;
+        font-family: inherit; font-size: 14.5px; color: #f1f5f9;
+        background: #16161f; outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+        border-color: #a3e635; background: #1e1e2a;
+        box-shadow: 0 0 0 3px rgba(163,230,53,0.1);
+    }
+    input::placeholder, textarea::placeholder { color: #8892a4; }
+    textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+    select { cursor: pointer; -webkit-appearance: none; appearance: none; padding-right: 38px; }
+    .select-wrap { position: relative; display: block; }
+    .select-wrap::after {
+        content: '';
+        position: absolute; right: 14px; top: 50%;
+        transform: translateY(-50%);
+        width: 10px; height: 6px; pointer-events: none;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpolyline points='0,0 5,6 10,0' fill='none' stroke='%23a3e635' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+        transition: transform 0.22s ease;
+    }
+    .select-wrap.open::after { transform: translateY(-50%) rotate(180deg); }
+    /* Chips de type de projet */
+    .type-chips { display: flex; flex-wrap: wrap; gap: 9px; }
+    .type-chip {
+        padding: 8px 18px; border-radius: 100px;
+        border: 1.5px solid #2a2a38; background: #16161f;
+        font-size: 13.5px; font-weight: 600; color: #8892a4;
+        cursor: pointer; transition: all 0.18s; white-space: nowrap;
+        font-family: inherit;
+    }
+    .type-chip:hover { border-color: #a3e635; color: #a3e635; }
+    .type-chip.selected { background: #a3e635; border-color: #a3e635; color: #0a0a12; }
+    input[name="type_projet"] { display: none; }
+    /* Submit */
+    .form-submit {
+        width: 100%; padding: 15px; border-radius: 10px;
+        background: #a3e635; color: #0a0a12; border: none;
+        font-family: inherit; font-size: 16px; font-weight: 700;
+        cursor: pointer; transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 4px 18px rgba(163,230,53,0.32); margin-top: 8px;
+    }
+    .form-submit:hover { background: #bef264; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(163,230,53,0.4); }
+    .form-legal { font-size: 12px; color: #8892a4; text-align: center; margin-top: 14px; line-height: 1.5; }
+
+    /* État succès */
+    .success-state {
+        display: none; text-align: center; padding: 20px 0;
+    }
+    .success-state .success-icon { font-size: 56px; margin-bottom: 20px; }
+    .success-state h3 { font-size: 24px; font-weight: 800; color: #f1f5f9; margin-bottom: 12px; }
+    .success-state p { font-size: 15px; color: #8892a4; line-height: 1.65; margin-bottom: 28px; max-width: 380px; margin-left: auto; margin-right: auto; }
+    .success-state a { display: inline-block; padding: 12px 28px; background: #a3e635; color: #0a0a12; border-radius: 8px; font-weight: 700; font-size: 14px; transition: background 0.2s; }
+    .success-state a:hover { background: #bef264; }
+
+    /* Sidebar info */
+    .soumission-sidebar { display: flex; flex-direction: column; gap: 18px; }
+    .sidebar-block {
+        background: #0f0f17; border: 1.5px solid #2a2a38;
+        border-radius: 16px; padding: 26px 24px;
+    }
+    .sidebar-block h4 { font-size: 15px; font-weight: 700; color: #f1f5f9; margin-bottom: 14px; }
+    .sidebar-promise { display: flex; flex-direction: column; gap: 13px; }
+    .sp-item { display: flex; align-items: flex-start; gap: 13px; }
+    .sp-item { border-left: 3px solid rgba(163,230,53,0.35); padding-left: 14px; }
+    .sp-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(163,230,53,0.1); border: 1.5px solid rgba(163,230,53,0.3); color: #a3e635; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sp-text strong { display: block; font-size: 13.5px; font-weight: 700; color: #f1f5f9; margin-bottom: 2px; }
+    .sp-text span { font-size: 12.5px; color: #8892a4; line-height: 1.45; }
+    .sidebar-temoignage { background: #0a0a12; }
+    .temo-stars { font-size: 14px; letter-spacing: 1px; margin-bottom: 10px; }
+    .temo-quote { font-size: 13.5px; color: #cbd5e1; font-style: italic; line-height: 1.65; margin-bottom: 14px; }
+    .temo-client { display: flex; align-items: center; gap: 10px; }
+    .temo-av { width: 36px; height: 36px; border-radius: 50%; background: rgba(163,230,53,0.12); border: 1.5px solid rgba(163,230,53,0.25); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #a3e635; flex-shrink: 0; }
+    .temo-name { font-size: 13px; font-weight: 700; color: #f1f5f9; }
+    .temo-info { font-size: 12px; color: #8892a4; }
+    .temo-cert { display: inline-flex; align-items: center; gap: 3px; background: rgba(163,230,53,0.1); border: 1px solid rgba(163,230,53,0.22); color: #a3e635; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 100px; margin-left: 5px; }
+
+    @media (max-width: 900px) {
+        .soumission-grid { grid-template-columns: 1fr; }
+        .soumission-sidebar { order: -1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    }
+    @media (max-width: 600px) {
+        .soumission-hero h1 { font-size: 34px; }
+        .form-card { padding: 28px 22px; }
+        .form-row { grid-template-columns: 1fr; gap: 0; }
+        .soumission-sidebar { grid-template-columns: 1fr; }
+    }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Info<span>API</span></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- OVERLAY MENU -->
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-overlay-inner">
+            <ul class="overlay-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li>
+                    <button class="overlay-dd-trigger">Services <span class="ov-arrow">+</span></button>
+                    <ul class="overlay-sub">
+                        <li><a href="sites-web.html">Sites web</a></li>
+                        <li><a href="automatisation.html">Solutions sur mesure</a></li>
+                        <li><a href="services.html">Forfaits entreprise</a></li>
+                    </ul>
+                </li>
+                <li><a href="apropos.html">À propos</a></li>
+                <li><a href="projets.html">Projets</a></li>
+            </ul>
+            <a href="soumission.html" class="overlay-cta">Prendre RDV Gratuitement</a>
+        </div>
+    </div>
+
+    <section class="soumission-hero">
+        <div class="container">
+            <span class="section-tag" style="color:#a3e635;margin-bottom:14px;display:inline-block;">Gratuit & sans engagement</span>
+            <h1>Décrivez votre <span>besoin</span></h1>
+            <p>Pas besoin de connaître la technique. Dites-moi votre situation en quelques lignes — je reviens sous 24h avec une recommandation claire.</p>
+        </div>
+    </section>
+
+    <section class="soumission-body">
+        <div class="container">
+            <div class="soumission-grid">
+
+                <!-- FORMULAIRE -->
+                <div class="form-card">
+                    <h2>Votre demande</h2>
+                    <p class="form-sub">Remplissez ce formulaire en 2 minutes. Plus c'est détaillé, meilleure sera ma recommandation.</p>
+
+                    <div id="formWrap">
+                        <form id="soumissionForm" novalidate>
+                            <!-- Nom & Email -->
+                            <div class="form-row">
+                                <div>
+                                    <label for="nom">Votre nom <span class="req">*</span></label>
+                                    <input type="text" id="nom" name="nom" placeholder="Nicolas Caron" required>
+                                </div>
+                                <div>
+                                    <label for="entreprise">Entreprise <span class="opt">(optionnel)</span></label>
+                                    <input type="text" id="entreprise" name="entreprise" placeholder="Groupe ABS">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div>
+                                    <label for="email">Courriel <span class="req">*</span></label>
+                                    <input type="email" id="email" name="email" placeholder="vous@exemple.com" required>
+                                </div>
+                                <div>
+                                    <label for="telephone">Téléphone <span class="opt">(optionnel)</span></label>
+                                    <input type="tel" id="telephone" name="telephone" placeholder="514-000-0000">
+                                </div>
+                            </div>
+
+                            <!-- Type de projet -->
+                            <div class="form-group">
+                                <label>Type de projet <span class="req">*</span></label>
+                                <div class="type-chips">
+                                    <button type="button" class="type-chip" data-val="Site web">Site web</button>
+                                    <button type="button" class="type-chip" data-val="Automatisation">Automatisation</button>
+                                    <button type="button" class="type-chip" data-val="Les deux">Les deux</button>
+                                    <button type="button" class="type-chip" data-val="Je ne sais pas encore">Je ne sais pas encore</button>
+                                </div>
+                                <input type="hidden" name="type_projet" id="typeProjet">
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group">
+                                <label for="description">Décrivez votre besoin <span class="req">*</span></label>
+                                <textarea id="description" name="description" required
+                                    placeholder="Ex : J'ai un restaurant à Laval et je n'ai pas de site web. Mes clients me demandent souvent si on fait des réservations en ligne. Je voudrais aussi avoir mon menu en ligne..."></textarea>
+                            </div>
+
+                            <!-- Budget & Délai -->
+                            <div class="form-row">
+                                <div>
+                                    <label for="budget">Budget approximatif</label>
+                                    <select id="budget" name="budget">
+                                        <option value="">Je ne sais pas encore</option>
+                                        <option value="Moins de 500$">Moins de 500$</option>
+                                        <option value="500$ – 1 000$">500$ – 1 000$</option>
+                                        <option value="1 000$ – 2 000$">1 000$ – 2 000$</option>
+                                        <option value="2 000$ – 5 000$">2 000$ – 5 000$</option>
+                                        <option value="Plus de 5 000$">Plus de 5 000$</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="delai">Délai souhaité</label>
+                                    <select id="delai" name="delai">
+                                        <option value="">Flexible</option>
+                                        <option value="Le plus tôt possible">Le plus tôt possible</option>
+                                        <option value="Dans 1 mois">Dans 1 mois</option>
+                                        <option value="Dans 2-3 mois">Dans 2-3 mois</option>
+                                        <option value="Sans pression">Sans pression</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="form-submit">Envoyer ma demande — c'est gratuit →</button>
+                            <p class="form-legal">Aucun engagement. Je vous réponds sous 24h. Vos informations restent confidentielles.</p>
+                        </form>
+                    </div>
+
+                    <!-- Succès -->
+                    <div class="success-state" id="successState">
+                        <div class="success-icon">✅</div>
+                        <h3>Demande reçue!</h3>
+                        <p>Merci! Je vous reviens personnellement sous <strong>24 heures</strong> avec mes recommandations adaptées à votre situation.</p>
+                        <a href="index.html">Retour à l'accueil</a>
+                    </div>
+                </div>
+
+                <!-- SIDEBAR -->
+                <div class="soumission-sidebar">
+                    <div class="sidebar-block">
+                        <h4>Ce que vous pouvez attendre</h4>
+                        <div class="sidebar-promise">
+                            <div class="sp-item">
+                                <div class="sp-num">1</div>
+                                <div class="sp-text">
+                                    <strong>Réponse sous 24h</strong>
+                                    <span>Je lis chaque demande personnellement et je vous reviens rapidement.</span>
+                                </div>
+                            </div>
+                            <div class="sp-item">
+                                <div class="sp-num">2</div>
+                                <div class="sp-text">
+                                    <strong>Recommandation sur mesure</strong>
+                                    <span>Pas un prix copié-collé — une vraie analyse de votre situation.</span>
+                                </div>
+                            </div>
+                            <div class="sp-item">
+                                <div class="sp-num">3</div>
+                                <div class="sp-text">
+                                    <strong>Aucun engagement</strong>
+                                    <span>Vous recevez la recommandation, vous décidez librement. Aucune pression.</span>
+                                </div>
+                            </div>
+                            <div class="sp-item">
+                                <div class="sp-num">4</div>
+                                <div class="sp-text">
+                                    <strong>Local à Laval</strong>
+                                    <span>Je suis disponible en personne ou à distance, selon ce qui vous convient.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Info-API — Nicolas Caron | Laval, Québec</p>
+            <p><a href="mailto:nicocaron26@gmail.com">nicocaron26@gmail.com</a> | <a href="tel:4383665758">438-366-5758</a></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+    /* Flèche select rotative */
+    document.querySelectorAll('select').forEach(sel => {
+        const wrap = document.createElement('div');
+        wrap.className = 'select-wrap';
+        sel.parentNode.insertBefore(wrap, sel);
+        wrap.appendChild(sel);
+        sel.addEventListener('mousedown', () => wrap.classList.toggle('open'));
+        sel.addEventListener('blur', () => wrap.classList.remove('open'));
+        sel.addEventListener('change', () => wrap.classList.remove('open'));
+    });
+
+    /* Chips type de projet */
+    document.querySelectorAll('.type-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            document.getElementById('typeProjet').value = chip.dataset.val;
+        });
+    });
+
+    /* Soumission formulaire */
+    document.getElementById('soumissionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const nom = document.getElementById('nom').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const desc = document.getElementById('description').value.trim();
+        if (!nom || !email || !desc) {
+            alert('Veuillez remplir les champs obligatoires (nom, courriel et description).');
+            return;
+        }
+        /* Quand le site sera déployé, remplacez cet effet JS par :
+           <form action="https://formsubmit.co/nicocaron26@gmail.com" method="POST"> */
+        document.getElementById('formWrap').style.display = 'none';
+        document.getElementById('successState').style.display = 'block';
+        window.scrollTo({ top: document.getElementById('successState').offsetTop - 120, behavior: 'smooth' });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Projets réalisés par Info-API — sites web et automatisation pour entrepreneurs et PME à Laval.">
+    <title>Projets | Info-API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+    .projets-hero {
+        padding: 148px 0 88px;
+        background: linear-gradient(140deg, #06060c 0%, #0a0a12 48%, #0f0f17 100%);
+        text-align: center; position: relative; overflow: hidden;
+    }
+    .projets-hero::before {
+        content: ''; position: absolute; top: -20%; right: -5%;
+        width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(163,230,53,0.07) 0%, transparent 65%);
+        pointer-events: none;
+    }
+    .projets-hero .container { position: relative; z-index: 1; }
+    .projets-hero h1 { font-size: 52px; font-weight: 800; color: #fff; letter-spacing: -2px; margin-bottom: 16px; line-height: 1.05; }
+    .projets-hero h1 span { color: #a3e635; }
+    .hero-desc { font-size: 18px; color: rgba(255,255,255,0.55); max-width: 520px; margin: 0 auto 52px; line-height: 1.65; }
+    .compteurs { display: flex; justify-content: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(163,230,53,0.12); border-radius: 16px; max-width: 520px; margin: 0 auto; overflow: hidden; }
+    .compteur { flex: 1; padding: 20px 16px; border-right: 1px solid rgba(163,230,53,0.1); text-align: center; }
+    .compteur:last-child { border-right: none; }
+    .compteur-val { font-size: 34px; font-weight: 800; color: #a3e635; letter-spacing: -1.5px; line-height: 1; margin-bottom: 6px; }
+    .compteur-label { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500; line-height: 1.3; }
+
+    .projets-controls { background: #16161f; border-bottom: 1px solid #2a2a38; position: sticky; top: 72px; z-index: 100; padding: 14px 0; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+    .controls-inner { display: flex; flex-direction: column; gap: 12px; }
+    .controls-top { display: flex; gap: 10px; align-items: center; }
+    .search-wrap { flex: 1; position: relative; }
+    .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
+    .search-input { width: 100%; padding: 10px 14px 10px 40px; border: 1.5px solid #2a2a38; border-radius: 10px; font-family: inherit; font-size: 14px; color: #f1f5f9; background: #0f0f17; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .search-input:focus { border-color: #a3e635; box-shadow: 0 0 0 3px rgba(163,230,53,0.1); background: #0a0a12; }
+    .search-input::placeholder { color: #8892a4; }
+    .search-hint { font-size: 12px; color: #a3e635; font-weight: 600; min-height: 15px; opacity: 0; transition: opacity 0.2s; }
+    .search-hint.visible { opacity: 1; }
+    .sort-select { padding: 10px 38px 10px 12px; border: 1.5px solid #2a2a38; border-radius: 10px; font-family: inherit; font-size: 13.5px; color: #cbd5e1; background: #0f0f17; cursor: pointer; outline: none; -webkit-appearance: none; appearance: none; }
+    .sort-select:focus { border-color: #a3e635; }
+    .sort-wrap { position: relative; display: inline-block; }
+    .sort-wrap::after { content: ''; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 10px; height: 6px; pointer-events: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpolyline points='0,0 5,6 10,0' fill='none' stroke='%23a3e635' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat; transition: transform 0.22s ease; }
+    .sort-wrap.open::after { transform: translateY(-50%) rotate(180deg); }
+    .view-toggle { display: flex; gap: 3px; background: #0a0a12; border-radius: 8px; padding: 3px; }
+    .view-btn { background: none; border: none; padding: 7px 10px; border-radius: 6px; cursor: pointer; font-size: 15px; color: #8892a4; transition: background 0.15s, color 0.15s; line-height: 1; }
+    .view-btn.active { background: #16161f; color: #f1f5f9; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+    .filters-row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+    .filter-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8892a4; white-space: nowrap; }
+    .filter-pill { background: #0f0f17; border: 1.5px solid #2a2a38; border-radius: 100px; padding: 5px 13px; font-size: 12.5px; font-weight: 500; color: #8892a4; cursor: pointer; transition: all 0.18s; white-space: nowrap; position: relative; overflow: hidden; font-family: inherit; }
+    .filter-pill:hover { border-color: var(--pill-color, #a3e635); color: var(--pill-color, #a3e635); }
+    .filter-pill.active { background: var(--pill-color, #a3e635); border-color: var(--pill-color, #a3e635); color: #0a0a12; font-weight: 600; }
+    .filter-pill.hover-preview { border-color: var(--pill-color, #a3e635); color: var(--pill-color, #a3e635); overflow: visible; }
+    .filter-pill.hover-preview::before { content: ''; position: absolute; bottom: -3px; left: 0; height: 2px; border-radius: 2px; background: var(--pill-color, #a3e635); animation: progressFill 1.5s linear forwards; }
+    @keyframes progressFill { from { width: 0 } to { width: 100% } }
+    .filter-divider { width: 1px; height: 18px; background: #2a2a38; margin: 0 2px; }
+
+    .resultats-bar { padding: 16px 0 2px; font-size: 13px; color: #8892a4; font-weight: 500; }
+    .resultats-bar strong { color: #f1f5f9; }
+
+    #projetsGrid { padding: 4px 0 96px; }
+    .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .grid-container.list-view { grid-template-columns: 1fr; }
+.projet-card { background: #16161f; border: 1.5px solid #2a2a38; border-radius: 18px; overflow: hidden; cursor: pointer; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease; position: relative; }
+    .projet-card:hover { transform: scale(1.03) translateY(-5px) !important; box-shadow: 0 24px 56px rgba(0,0,0,0.35); border-color: rgba(163,230,53,0.25); }
+    .projet-card.themed { border-color: var(--theme-border) !important; background: var(--theme-bg) !important; }
+    .badge-vedette { position: absolute; top: 12px; left: 12px; background: linear-gradient(90deg, #f59e0b, #f97316); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px; z-index: 2; box-shadow: 0 2px 8px rgba(249,115,22,0.35); }
+    .card-preview { aspect-ratio: 16 / 10; overflow: hidden; position: relative; background: #0a0a12; }
+    .card-preview img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .projet-card:hover .card-preview img { transform: scale(1.06); }
+    .card-hint { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s; backdrop-filter: blur(2px); }
+    .projet-card:hover .card-hint { opacity: 1; }
+    .card-hint span { color: #0a0a12; font-size: 13.5px; font-weight: 600; background: rgba(163,230,53,0.9); padding: 9px 18px; border-radius: 100px; }
+
+    .card-mockup { width: 100%; height: 100%; display: flex; flex-direction: column; }
+    .mk-chrome { background: #0f0f17; padding: 6px 10px; display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .mk-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .mk-dot:nth-child(1) { background: #ff5f57; }
+    .mk-dot:nth-child(2) { background: #febc2e; }
+    .mk-dot:nth-child(3) { background: #28c840; }
+    .mk-url { flex: 1; margin-left: 7px; height: 12px; background: rgba(255,255,255,0.04); border-radius: 3px; display: flex; align-items: center; padding: 0 7px; font-size: 9px; color: rgba(255,255,255,0.18); font-family: monospace; }
+    .mk-body { flex: 1; overflow: hidden; position: relative; }
+    .mk-nav { height: 24px; background: var(--mk-accent, #a3e635); display: flex; align-items: center; padding: 0 10px; gap: 6px; }
+    .mk-nav-item { height: 5px; background: rgba(0,0,0,0.2); border-radius: 2px; }
+    .mk-hero { background: var(--mk-dark, #06060c); padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+    .mk-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+    .mk-btns { display: flex; gap: 5px; margin-top: 3px; }
+    .mk-btn { height: 13px; border-radius: 2px; background: var(--mk-accent, #a3e635); opacity: 0.8; }
+    .mk-content { padding: 7px 10px; display: flex; flex-direction: column; gap: 3px; }
+    .mk-cards { display: flex; gap: 4px; margin-top: 3px; }
+    .mk-card { flex: 1; height: 22px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+    .mk-init { position: absolute; bottom: 5px; right: 8px; font-size: 10px; font-weight: 800; letter-spacing: 1px; color: var(--mk-accent, #a3e635); opacity: 0.35; }
+
+    .card-info { padding: 20px 20px 18px; }
+    .card-badges { display: flex; gap: 6px; margin-bottom: 11px; flex-wrap: wrap; }
+    .badge-type { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 100px; }
+    .badge-type.vitrine    { background:rgba(163,230,53,0.1);  color:#a3e635; border:1px solid rgba(163,230,53,0.2); }
+    .badge-type.restaurant { background:rgba(239,68,68,0.09);  color:#dc2626; border:1px solid rgba(239,68,68,0.2); }
+    .badge-type.landing    { background:rgba(249,115,22,0.09); color:#ea6b00; border:1px solid rgba(249,115,22,0.2); }
+    .badge-type.ecommerce  { background:rgba(16,185,129,0.09); color:#059669; border:1px solid rgba(16,185,129,0.2); }
+    .badge-type.informatif { background:rgba(245,158,11,0.09); color:#d97706; border:1px solid rgba(245,158,11,0.2); }
+    .badge-type.interne    { background:rgba(139,92,246,0.09); color:#7c3aed; border:1px solid rgba(139,92,246,0.2); }
+    .badge-ok  { font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;background:rgba(16,185,129,0.09);color:#059669;border:1px solid rgba(16,185,129,0.2); }
+    .badge-wip { font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;background:rgba(245,158,11,0.09);color:#d97706;border:1px solid rgba(245,158,11,0.2); }
+    .card-highlight { font-size: 12.5px; font-weight: 600; color: var(--theme-primary, #a3e635); margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+    .card-highlight::before { content: '→'; font-size: 11px; }
+    .card-nom { font-size: 16.5px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; letter-spacing: -0.3px; }
+    .card-desc { font-size: 13px; color: #8892a4; line-height: 1.6; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-meta { display: flex; gap: 10px; align-items: center; font-size: 12px; color: #8892a4; font-weight: 500; flex-wrap: wrap; }
+
+    .list-view .projet-card { display: grid; grid-template-columns: 260px 1fr; }
+    .list-view .card-preview { aspect-ratio: unset; height: 100%; min-height: 150px; }
+    .list-view .projet-card:hover { transform: translateX(5px) translateY(-2px) !important; }
+
+    .empty-state { text-align: center; padding: 72px 20px; grid-column: 1/-1; color: #8892a4; }
+    .empty-state .ei { font-size: 44px; margin-bottom: 14px; }
+    .empty-state h3 { font-size: 17px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; }
+
+    .projet-overlay { position: fixed; top: 72px; left: 0; right: 0; bottom: 0; background: #0f0f17; z-index: 999; transform: translateY(100%); transition: transform 0.48s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
+    .projet-overlay.open { transform: translateY(0); }
+    .overlay-bar { display: flex; align-items: center; gap: 14px; padding: 0 24px; height: 54px; border-bottom: 1px solid #2a2a38; flex-shrink: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .overlay-close-btn { background: #16161f; border: none; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 16px; color: #8892a4; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; }
+    .overlay-close-btn:hover { background: #2a2a38; color: #f1f5f9; }
+    .overlay-info { flex: 1; min-width: 0; }
+    .overlay-nom { font-size: 14.5px; font-weight: 700; color: #f1f5f9; }
+    .overlay-sub { font-size: 12px; color: #8892a4; }
+    .overlay-body { flex: 1; overflow-y: auto; }
+    .overlay-iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    .cs-wrap { max-width: 800px; margin: 0 auto; padding: 48px 28px 80px; }
+    .cs-head { margin-bottom: 32px; }
+    .cs-badges { display: flex; gap: 7px; margin-bottom: 14px; flex-wrap: wrap; }
+    .cs-title { font-size: 34px; font-weight: 800; color: #f1f5f9; letter-spacing: -1px; margin-bottom: 6px; }
+    .cs-sub { font-size: 15px; color: #8892a4; }
+    .cs-stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 36px; }
+    .cs-stat { background: #16161f; border: 1.5px solid #2a2a38; border-radius: 14px; padding: 18px 14px; text-align: center; }
+    .cs-stat:hover { border-color: rgba(163,230,53,0.2); }
+    .cs-sv { font-size: 28px; font-weight: 800; color: #a3e635; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
+    .cs-sl { font-size: 11.5px; color: #8892a4; font-weight: 500; line-height: 1.4; }
+    .cs-desc { font-size: 15.5px; color: #cbd5e1; line-height: 1.78; margin-bottom: 36px; }
+    .cs-review { background: #16161f; border: 1.5px solid #2a2a38; border-radius: 18px; padding: 36px 40px; position: relative; margin-bottom: 24px; }
+    .cs-qmark { font-size: 72px; line-height: 0.5; color: #a3e635; opacity: 0.08; font-family: Georgia, serif; position: absolute; top: 28px; left: 32px; }
+    .cs-stars { font-size: 17px; letter-spacing: 2px; margin-bottom: 14px; }
+    .cs-quote { font-size: 17px; font-style: italic; color: #f1f5f9; line-height: 1.65; margin-bottom: 24px; font-weight: 500; position: relative; z-index: 1; }
+    .cs-client-row { display: flex; align-items: center; gap: 12px; }
+    .cs-av { width: 42px; height: 42px; border-radius: 50%; background: rgba(163,230,53,0.1); border: 1.5px solid rgba(163,230,53,0.2); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #a3e635; flex-shrink: 0; }
+    .cs-cn { font-size: 14px; font-weight: 700; color: #f1f5f9; }
+    .cs-cp { font-size: 12.5px; color: #8892a4; }
+    .cs-cert { display: inline-flex; align-items: center; gap: 4px; background: rgba(16,185,129,0.09); border: 1px solid rgba(16,185,129,0.22); color: #059669; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px; margin-left: 7px; }
+    .cs-pending { display: flex; align-items: center; gap: 12px; background: rgba(163,230,53,0.06); border: 1.5px solid rgba(163,230,53,0.15); border-radius: 12px; padding: 16px 20px; font-size: 14px; color: #a3e635; font-weight: 500; }
+    .cs-cta { display: flex; align-items: center; gap: 12px; background: #16161f; border: 1.5px solid #2a2a38; border-radius: 14px; padding: 22px 26px; margin-top: 16px; }
+    .cs-cta p { flex: 1; color: #8892a4; font-size: 14px; line-height: 1.5; margin: 0; }
+    .cs-cta p strong { color: #f1f5f9; display: block; margin-bottom: 3px; font-size: 15px; }
+    .cs-cta a { background: #a3e635; color: #0a0a12; padding: 11px 20px; border-radius: 8px; font-size: 13.5px; font-weight: 600; white-space: nowrap; transition: background 0.2s, transform 0.15s; box-shadow: 0 2px 12px rgba(163,230,53,0.25); }
+    .cs-cta a:hover { background: #bef264; transform: translateY(-1px); }
+
+    @media (max-width: 960px) { .grid-container { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 640px) {
+        .projets-hero h1 { font-size: 36px; }
+        .grid-container { grid-template-columns: 1fr !important; }
+        .list-view .projet-card { grid-template-columns: 1fr; }
+        .cs-stats-grid { grid-template-columns: repeat(2,1fr); }
+        .cs-title { font-size: 26px; }
+        .cs-review { padding: 24px 20px; }
+        .controls-top { flex-wrap: wrap; }
+    }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Info<span>API</span></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- OVERLAY MENU -->
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-overlay-inner">
+            <ul class="overlay-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li>
+                    <button class="overlay-dd-trigger">Services <span class="ov-arrow">+</span></button>
+                    <ul class="overlay-sub">
+                        <li><a href="sites-web.html">Sites web</a></li>
+                        <li><a href="automatisation.html">Solutions sur mesure</a></li>
+                        <li><a href="services.html">Forfaits entreprise</a></li>
+                    </ul>
+                </li>
+                <li><a href="apropos.html">À propos</a></li>
+                <li><a href="projets.html">Projets</a></li>
+            </ul>
+            <a href="soumission.html" class="overlay-cta">Prendre RDV Gratuitement</a>
+        </div>
+    </div>
+
+    <section class="projets-hero">
+        <div class="container">
+            <span class="section-tag" style="color:#a3e635;margin-bottom:14px;display:inline-block;">Portfolio</span>
+            <h1>Mes <span>Projets</span></h1>
+            <p class="hero-desc">Chaque livraison vise un seul objectif : vous faire gagner du temps, de l'argent, et vous démarquer de la concurrence.</p>
+            <div class="compteurs">
+                <div class="compteur">
+                    <div class="compteur-val" data-target="2" data-suffix="">0</div>
+                    <div class="compteur-label">Projets<br>livrés</div>
+                </div>
+                <div class="compteur">
+                    <div class="compteur-val" data-target="47" data-suffix="h">0</div>
+                    <div class="compteur-label">Heures<br>investies</div>
+                </div>
+                <div class="compteur">
+                    <div class="compteur-val" data-target="1" data-suffix="">0</div>
+                    <div class="compteur-label">Clients<br>satisfaits</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="projets-controls">
+        <div class="container">
+            <div class="controls-inner">
+                <div class="controls-top">
+                    <div class="search-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="searchInput"
+                               placeholder="Recherche intelligente… (ex: économiser du temps, vitrine, construction)">
+                    </div>
+                    <div class="sort-wrap">
+                        <select class="sort-select" id="sortSelect">
+                            <option value="vedette">En vedette</option>
+                            <option value="annee-desc">Plus récent</option>
+                            <option value="annee-asc">Plus ancien</option>
+                            <option value="heures-desc">Plus de travail</option>
+                        </select>
+                    </div>
+                    <div class="view-toggle">
+                        <button class="view-btn active" id="btnGrid" title="Grille">⊞</button>
+                        <button class="view-btn" id="btnList" title="Liste">☰</button>
+                    </div>
+                </div>
+                <div class="search-hint" id="searchHint"></div>
+                <div class="filters-row">
+                    <span class="filter-label">Type</span>
+                    <button class="filter-pill active" data-cat="type" data-val="" style="--pill-color:#2563eb">Tous</button>
+                    <button class="filter-pill" data-cat="type" data-val="vitrine" style="--pill-color:#a3e635">Site vitrine</button>
+                    <button class="filter-pill" data-cat="type" data-val="restaurant" style="--pill-color:#ef4444">Restaurant</button>
+                    <button class="filter-pill" data-cat="type" data-val="landing" style="--pill-color:#f97316">Landing page</button>
+                    <button class="filter-pill" data-cat="type" data-val="ecommerce" style="--pill-color:#10b981">Boutique en ligne</button>
+                    <button class="filter-pill" data-cat="type" data-val="informatif" style="--pill-color:#f59e0b">Informatif</button>
+                    <button class="filter-pill" data-cat="type" data-val="interne" style="--pill-color:#8b5cf6">Outil interne</button>
+                    <div class="filter-divider"></div>
+                    <span class="filter-label">Statut</span>
+                    <button class="filter-pill" data-cat="statut" data-val="livre" style="--pill-color:#10b981">Livré ✓</button>
+                    <button class="filter-pill" data-cat="statut" data-val="en-cours" style="--pill-color:#f59e0b">En cours</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="projetsGrid">
+        <div class="container">
+            <div class="resultats-bar" id="resultatsBar"></div>
+            <div class="grid-container" id="gridContainer"></div>
+        </div>
+    </section>
+
+    <div class="projet-overlay" id="projetOverlay" aria-hidden="true">
+        <div class="overlay-bar">
+            <button class="overlay-close-btn" id="overlayClose" aria-label="Fermer">✕</button>
+            <div class="overlay-info">
+                <div class="overlay-nom" id="overlayNom"></div>
+                <div class="overlay-sub" id="overlaySub"></div>
+            </div>
+        </div>
+        <div class="overlay-body" id="overlayBody"></div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Info-API — Nicolas Caron | Laval, Québec</p>
+            <p><a href="mailto:nicocaron26@gmail.com">nicocaron26@gmail.com</a> | <a href="tel:4383665758">438-366-5758</a></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+    /* ============================================================
+       DONNÉES — Ajouter un projet = copier un objet dans PROJETS
+    ============================================================ */
+    const PROJETS = [
+      {
+        id: 'groupe-abs',
+        nom: 'Groupe ABS',
+        sousTitre: 'Site corporatif — Construction',
+        type: 'interne',
+        secteur: 'construction',
+        annee: 2026,
+        heures: 47,
+        statut: 'livre',
+        vedette: true,
+        highlight: '28 fichiers codés de A à Z, livrés en autonomie complète',
+        description: 'Site web d\'entreprise complet pour une compagnie de construction lavalloise. Menus interactifs, zones de téléchargement, interface moderne et responsive — livré entièrement de façon autonome en moins de 50 heures.',
+        image: null,     // → 'img/projets/groupe-abs.jpg'
+        url: null,       // → 'https://groupe-abs-demo.netlify.app'
+        tags: ['construction','vitrine','formulaire','responsive','telechargement','fichiers'],
+        stats: [
+          { label: 'Fichiers développés',   value: '28'   },
+          { label: 'Heures de développement', value: '47h' },
+          { label: 'Fonctions interactives', value: '6+'  },
+          { label: 'Livraison autonome',     value: '100%' },
+        ],
+        review: null
+      },
+      {
+        id: 'info-api-site',
+        nom: 'Info-API',
+        sousTitre: 'Site vitrine & portfolio personnel',
+        type: 'informatif',
+        secteur: 'tech',
+        annee: 2026,
+        heures: null,
+        statut: 'livre',
+        vedette: false,
+        highlight: 'Portfolio professionnel avec design moderne et animations soignées',
+        description: 'Site vitrine pour présenter mes services, projets et expertise aux PME et entrepreneurs de Laval. Design 100% original, animations CSS, formulaire de soumission et optimisé pour Google.',
+        image: null,
+        url: null,
+        tags: ['portfolio','vitrine','responsive','tech','animations'],
+        stats: [
+          { label: 'Pages développées', value: '5'    },
+          { label: 'Animations CSS',    value: '20+'  },
+          { label: 'Design original',   value: '100%' },
+          { label: 'Mobile-ready',      value: '✓'    },
+        ],
+        review: null,
+      }
+    ];
+
+    /* Recherche sémantique */
+    const SEMANTIC = {
+      'vente':        ['commerce','boutique','conversion','achat','panier'],
+      'restaurant':   ['menu','reservation','commande','nourriture','traiteur','cuisine'],
+      'temps':        ['automatisation','efficacite','workflow','rapide','autonome','script'],
+      'argent':       ['soumission','facturation','economie','cout','prix','budget'],
+      'vitrine':      ['presentation','branding','marque','image','professionnel','portfolio'],
+      'construction': ['batiment','travaux','chantier','renovation','entrepreneur'],
+      'contact':      ['formulaire','soumission','devis','demande'],
+      'mobile':       ['responsive','telephone','tablette','adaptatif'],
+    };
+
+    const THEME_COLORS = {
+      construction: { primary:'#f97316', bg:'rgba(249,115,22,0.07)', border:'rgba(249,115,22,0.3)' },
+      restaurant:   { primary:'#ef4444', bg:'rgba(239,68,68,0.07)',  border:'rgba(239,68,68,0.3)'  },
+      commerce:     { primary:'#10b981', bg:'rgba(16,185,129,0.07)', border:'rgba(16,185,129,0.3)' },
+      tech:         { primary:'#2563eb', bg:'rgba(37,99,235,0.07)',  border:'rgba(37,99,235,0.3)'  },
+    };
+
+    const TYPE_LABELS = { vitrine:'Site vitrine', restaurant:'Restaurant / Café', landing:'Landing page', ecommerce:'Boutique en ligne', informatif:'Site informatif', interne:'Outil interne' };
+
+    let state = { search:'', filters:{type:'',statut:''}, sort:'vedette', view:'grid' };
+
+    const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+
+    function expandSearch(q) {
+      const t = new Set([q]);
+      Object.entries(SEMANTIC).forEach(([k,vals]) => {
+        const nk = norm(k);
+        if (nk.includes(q)||q.includes(nk)) { t.add(nk); vals.forEach(v=>t.add(norm(v))); }
+        vals.forEach(v => { const nv=norm(v); if(nv.includes(q)||q.includes(nv)){t.add(nk);vals.forEach(v2=>t.add(norm(v2)));} });
+      });
+      return t;
+    }
+
+    function matchesSearch(p, terms) {
+      const txt = norm([p.nom,p.description,p.highlight,p.secteur,p.type,...(p.tags||[])].join(' '));
+      return [...terms].some(t => txt.includes(t));
+    }
+
+    function buildMockup(p) {
+      const c = THEME_COLORS[p.secteur]||THEME_COLORS.tech;
+      const init = p.nom.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      const urlHint = p.nom.toLowerCase().replace(/\s+/g,'-')+'.com';
+      return `<div class="card-mockup" style="--mk-accent:${c.primary};--mk-dark:#07111f;">
+        <div class="mk-chrome"><div class="mk-dot"></div><div class="mk-dot"></div><div class="mk-dot"></div><div class="mk-url">${urlHint}</div></div>
+        <div class="mk-body">
+          <div class="mk-nav"><div class="mk-nav-item" style="width:30px"></div><div class="mk-nav-item" style="width:30px"></div><div class="mk-nav-item" style="width:30px"></div><div class="mk-nav-item" style="width:16px;margin-left:auto"></div></div>
+          <div class="mk-hero"><div class="mk-bar" style="width:72%"></div><div class="mk-bar" style="width:55%"></div><div class="mk-btns"><div class="mk-btn" style="width:34px"></div><div class="mk-btn" style="width:28px;opacity:0.2;background:rgba(255,255,255,0.2)"></div></div></div>
+          <div class="mk-content"><div class="mk-bar" style="width:68%"></div><div class="mk-bar" style="width:50%"></div><div class="mk-cards"><div class="mk-card"></div><div class="mk-card"></div><div class="mk-card"></div></div></div>
+          <div class="mk-init">${init}</div>
+        </div>
+      </div>`;
+    }
+
+    function buildCard(p) {
+      const c = THEME_COLORS[p.secteur]||THEME_COLORS.tech;
+      const preview = p.image ? `<img src="${p.image}" alt="${p.nom}" loading="lazy">` : buildMockup(p);
+      const statusBadge = p.statut==='livre' ? '<span class="badge-ok">Livré ✓</span>' : '<span class="badge-wip">En cours</span>';
+      return `<div class="projet-card" data-id="${p.id}" data-secteur="${p.secteur}" data-type="${p.type}" style="--theme-primary:${c.primary};--theme-border:${c.border};--theme-bg:${c.bg}">
+        ${p.vedette?'<div class="badge-vedette">⭐ En vedette</div>':''}
+        <div class="card-preview">${preview}<div class="card-hint"><span>Explorer ce projet</span></div></div>
+        <div class="card-info">
+          <div class="card-badges"><span class="badge-type ${p.type}">${TYPE_LABELS[p.type]||p.type}</span>${statusBadge}</div>
+          <div class="card-highlight">${p.highlight}</div>
+          <div class="card-nom">${p.nom}</div>
+          <div class="card-desc">${p.description}</div>
+          <div class="card-meta">${p.heures?`<span>⏱ ${p.heures}h</span>`:''}<span>📅 ${p.annee}</span>${p.review?'<span>⭐ Avis client</span>':''}</div>
+        </div>
+      </div>`;
+    }
+
+    function render() {
+      let list = [...PROJETS];
+      if (state.search.trim()) {
+        const q = norm(state.search);
+        const terms = expandSearch(q);
+        const hintEl = document.getElementById('searchHint');
+        const cats = {construction:'Construction & Travaux',restaurant:'Restauration',commerce:'Commerce',tech:'Technologie'};
+        let hint = '';
+        for (const [k,label] of Object.entries(cats)) { if([...terms].includes(norm(k))&&!norm(k).includes(q)){hint=`Recherche étendue : ${label}`;break;} }
+        hintEl.textContent = hint ? `✦ ${hint}` : '';
+        hintEl.classList.toggle('visible', !!hint);
+        list = list.filter(p=>matchesSearch(p,terms));
+      } else {
+        document.getElementById('searchHint').classList.remove('visible');
+      }
+      if (state.filters.type)   list = list.filter(p=>p.type===state.filters.type);
+      if (state.filters.statut) list = list.filter(p=>p.statut===state.filters.statut);
+      list.sort((a,b) => {
+        if (state.sort==='annee-desc')  return b.annee-a.annee;
+        if (state.sort==='annee-asc')   return a.annee-b.annee;
+        if (state.sort==='heures-desc') return (b.heures||0)-(a.heures||0);
+        return (b.vedette?1:0)-(a.vedette?1:0);
+      });
+      const grid = document.getElementById('gridContainer');
+      grid.classList.toggle('list-view', state.view==='list');
+      grid.innerHTML = list.length
+        ? list.map(buildCard).join('')
+        : `<div class="empty-state"><div class="ei">🔍</div><h3>Aucun projet trouvé</h3><p>Essayez un autre filtre ou mot-clé.</p></div>`;
+      grid.querySelectorAll('.projet-card').forEach(card => {
+        card.addEventListener('click', () => { const p=PROJETS.find(x=>x.id===card.dataset.id); if(p) openOverlay(p); });
+      });
+      document.getElementById('resultatsBar').innerHTML = list.length===PROJETS.length
+        ? `<strong>${PROJETS.length}</strong> projet${PROJETS.length>1?'s':''}`
+        : `<strong>${list.length}</strong> sur <strong>${PROJETS.length}</strong> projets`;
+    }
+
+    function buildCaseStudy(p) {
+      const stats = (p.stats||[]).map(s=>`<div class="cs-stat"><div class="cs-sv">${s.value}</div><div class="cs-sl">${s.label}</div></div>`).join('');
+      const review = p.review ? `<div class="cs-review"><div class="cs-qmark">"</div><div class="cs-stars">${'⭐'.repeat(p.review.etoiles)}</div><div class="cs-quote">"${p.review.texte}"</div><div class="cs-client-row"><div class="cs-av">${p.review.initiales||p.review.auteur[0]}</div><div><div class="cs-cn">${p.review.auteur}${p.review.certifie?'<span class="cs-cert">✓ Client certifié</span>':''}</div><div class="cs-cp">${p.review.poste}</div></div></div></div>` : '';
+      const pending = !p.url ? `<div class="cs-pending"><span style="font-size:20px">🔗</span><span>Déploiement en cours — le site sera bientôt accessible en ligne.</span></div>` : '';
+      return `<div class="cs-wrap">
+        <div class="cs-head"><div class="cs-badges"><span class="badge-type ${p.type}">${TYPE_LABELS[p.type]||p.type}</span>${p.vedette?'<span class="badge-vedette" style="position:static;box-shadow:none">⭐ En vedette</span>':''}</div><h2 class="cs-title">${p.nom}</h2><p class="cs-sub">${p.sousTitre}</p></div>
+        <div class="cs-stats-grid">${stats}</div>
+        <p class="cs-desc">${p.description}</p>
+        ${review}${pending}
+        <div class="cs-cta"><p><strong>Un projet similaire en tête?</strong>Obtenez une soumission gratuite, sans engagement.</p><a href="soumission.html">Demander →</a></div>
+      </div>`;
+    }
+
+    function openOverlay(p) {
+      document.getElementById('overlayNom').textContent = p.nom;
+      document.getElementById('overlaySub').textContent = p.sousTitre;
+      document.getElementById('overlayBody').innerHTML = p.url
+        ? `<iframe class="overlay-iframe" src="${p.url}" title="${p.nom}" allow="fullscreen"></iframe>`
+        : buildCaseStudy(p);
+      document.getElementById('projetOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeOverlay() {
+      document.getElementById('projetOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+      setTimeout(() => { document.getElementById('overlayBody').innerHTML = ''; }, 500);
+    }
+
+    document.getElementById('overlayClose').addEventListener('click', closeOverlay);
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeOverlay(); });
+
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const cat = pill.dataset.cat, val = pill.dataset.val;
+        const toggling = state.filters[cat]===val && val!=='';
+        document.querySelectorAll(`.filter-pill[data-cat="${cat}"]`).forEach(p=>p.classList.remove('active'));
+        if (toggling) {
+          state.filters[cat] = '';
+          document.querySelector(`.filter-pill[data-cat="${cat}"][data-val=""]`)?.classList.add('active');
+        } else {
+          state.filters[cat] = val;
+          pill.classList.add('active');
+        }
+        render();
+      });
+    });
+
+    const sortSel = document.getElementById('sortSelect');
+    const sortWrap = sortSel.closest('.sort-wrap');
+    sortSel.addEventListener('mousedown', () => sortWrap.classList.toggle('open'));
+    sortSel.addEventListener('blur', () => sortWrap.classList.remove('open'));
+    sortSel.addEventListener('change', () => sortWrap.classList.remove('open'));
+
+    document.getElementById('searchInput').addEventListener('input', e => { state.search=e.target.value; render(); });
+    document.getElementById('sortSelect').addEventListener('change', e => { state.sort=e.target.value; render(); });
+    document.getElementById('btnGrid').addEventListener('click', () => { state.view='grid'; document.getElementById('btnGrid').classList.add('active'); document.getElementById('btnList').classList.remove('active'); render(); });
+    document.getElementById('btnList').addEventListener('click', () => { state.view='list'; document.getElementById('btnList').classList.add('active'); document.getElementById('btnGrid').classList.remove('active'); render(); });
+
+    /* Compteurs animés */
+    const cObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el=e.target, target=parseInt(el.dataset.target), suffix=el.dataset.suffix||'', t0=performance.now();
+        (function step(now){ const p=Math.min((now-t0)/1800,1), ease=1-Math.pow(1-p,3); el.textContent=Math.floor(ease*target)+suffix; if(p<1) requestAnimationFrame(step); else el.textContent=target+suffix; })(t0);
+        cObs.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.compteur-val[data-target]').forEach(el=>cObs.observe(el));
+
+    render();
+    </script>
+</body>
+</html>

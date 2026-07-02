@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Questions fréquentes sur les services d'Info-API — sites web, automatisation, prix et processus à Laval.">
+    <title>FAQ | Info-API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+    .faq-hero {
+        padding: 148px 0 72px;
+        background: linear-gradient(140deg, #06060c 0%, #0a0a12 48%, #0f0f17 100%);
+        text-align: center; position: relative; overflow: hidden;
+    }
+    .faq-hero::before {
+        content: ''; position: absolute; top: -10%; left: 50%; transform: translateX(-50%);
+        width: 700px; height: 700px;
+        background: radial-gradient(circle, rgba(163,230,53,0.06) 0%, transparent 65%);
+        pointer-events: none;
+    }
+    .faq-hero .container { position: relative; z-index: 1; }
+    .faq-hero h1 { font-size: 50px; font-weight: 800; color: #fff; letter-spacing: -1.8px; margin-bottom: 16px; }
+    .faq-hero h1 span { color: #a3e635; }
+    .faq-hero p { font-size: 17px; color: rgba(255,255,255,0.55); max-width: 480px; margin: 0 auto; line-height: 1.65; }
+
+    /* Corps FAQ */
+    .faq-body { padding: 72px 0 96px; background: #0f0f17; }
+    .faq-layout { display: grid; grid-template-columns: 220px 1fr; gap: 48px; align-items: start; }
+
+    /* Nav latérale catégories */
+    .faq-nav { position: sticky; top: 96px; }
+    .faq-nav-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8892a4; margin-bottom: 12px; }
+    .faq-nav-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+    .faq-nav-list a {
+        display: block; padding: 9px 14px; border-radius: 9px;
+        font-size: 13.5px; font-weight: 600; color: #8892a4;
+        transition: all 0.18s; border: 1.5px solid transparent;
+    }
+    .faq-nav-list a:hover { background: rgba(163,230,53,0.07); color: #a3e635; }
+    .faq-nav-list a.active { background: #16161f; border-color: rgba(163,230,53,0.2); color: #a3e635; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .faq-nav-cta {
+        margin-top: 24px; background: #16161f; border: 1.5px solid rgba(163,230,53,0.15);
+        border-radius: 14px; padding: 20px 16px; text-align: center;
+    }
+    .faq-nav-cta p { font-size: 13px; color: #8892a4; line-height: 1.5; margin-bottom: 12px; }
+    .faq-nav-cta a { display: block; padding: 10px 16px; background: #a3e635; color: #0a0a12; border-radius: 8px; font-size: 13px; font-weight: 700; transition: background 0.2s; }
+    .faq-nav-cta a:hover { background: #bef264; }
+
+    /* Sections FAQ */
+    .faq-sections { display: flex; flex-direction: column; gap: 40px; }
+    .faq-category { scroll-margin-top: 96px; }
+    .faq-cat-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .faq-cat-icon { width: 42px; height: 42px; border-radius: 11px; background: rgba(163,230,53,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .faq-cat-header h2 { font-size: 20px; font-weight: 800; color: #f1f5f9; }
+
+    /* Accordéon */
+    .faq-list { display: flex; flex-direction: column; gap: 0; border-radius: 16px; overflow: hidden; border: 1.5px solid #2a2a38; background: #16161f; }
+    .faq-item { border-bottom: 1.5px solid #2a2a38; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-question {
+        width: 100%; background: none; border: none; padding: 20px 24px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        cursor: pointer; text-align: left; font-family: inherit;
+        transition: background 0.18s;
+    }
+    .faq-question:hover { background: rgba(163,230,53,0.04); }
+    .faq-item.open .faq-question { background: rgba(163,230,53,0.05); }
+    .faq-q-text { font-size: 15px; font-weight: 600; color: #f1f5f9; line-height: 1.4; }
+    .faq-chevron { width: 24px; height: 24px; border-radius: 50%; background: #2a2a38; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8892a4; flex-shrink: 0; transition: all 0.25s; }
+    .faq-item.open .faq-chevron { background: #a3e635; color: #0a0a12; transform: rotate(180deg); }
+    .faq-answer {
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .faq-item.open .faq-answer { max-height: 600px; }
+    .faq-answer-inner { padding: 0 24px 22px; font-size: 14.5px; color: #cbd5e1; line-height: 1.7; }
+    .faq-answer-inner p { margin-bottom: 10px; }
+    .faq-answer-inner p:last-child { margin-bottom: 0; }
+    .faq-answer-inner ul { padding-left: 18px; margin: 8px 0; }
+    .faq-answer-inner ul li { margin-bottom: 6px; }
+    .faq-answer-inner strong { color: #f1f5f9; }
+    .faq-answer-inner a { color: #a3e635; font-weight: 600; }
+    .faq-answer-inner .answer-highlight {
+        background: rgba(163,230,53,0.06); border-left: 3px solid #a3e635;
+        border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 12px 0;
+        font-size: 14px; color: #bef264;
+    }
+
+    /* CTA final */
+    .faq-cta { padding: 80px 0; background: #16161f; text-align: center; }
+    .faq-cta h2 { font-size: 34px; font-weight: 800; color: #f1f5f9; letter-spacing: -0.8px; margin-bottom: 14px; }
+    .faq-cta p { font-size: 16px; color: #8892a4; max-width: 460px; margin: 0 auto 32px; line-height: 1.65; }
+
+    @media (max-width: 900px) {
+        .faq-layout { grid-template-columns: 1fr; }
+        .faq-nav { position: static; display: none; }
+    }
+    @media (max-width: 600px) {
+        .faq-hero h1 { font-size: 34px; }
+        .faq-question { padding: 16px 18px; }
+        .faq-answer-inner { padding: 0 18px 18px; }
+    }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Info<span>API</span></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- OVERLAY MENU -->
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-overlay-inner">
+            <ul class="overlay-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li>
+                    <button class="overlay-dd-trigger">Services <span class="ov-arrow">+</span></button>
+                    <ul class="overlay-sub">
+                        <li><a href="sites-web.html">Sites web</a></li>
+                        <li><a href="automatisation.html">Solutions sur mesure</a></li>
+                        <li><a href="services.html">Forfaits entreprise</a></li>
+                    </ul>
+                </li>
+                <li><a href="apropos.html">À propos</a></li>
+                <li><a href="projets.html">Projets</a></li>
+            </ul>
+            <a href="soumission.html" class="overlay-cta">Prendre RDV Gratuitement</a>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="faq-hero">
+        <div class="container">
+            <span class="section-tag" style="color:#60a5fa;margin-bottom:14px;display:inline-block;">Questions fréquentes</span>
+            <h1>Vous avez des <span>questions?</span></h1>
+            <p>Les réponses aux questions que je reçois le plus souvent. Honnêtes, sans jargon.</p>
+        </div>
+    </section>
+
+    <!-- CORPS -->
+    <section class="faq-body">
+        <div class="container">
+            <div class="faq-layout">
+
+                <!-- Navigation latérale -->
+                <aside class="faq-nav">
+                    <p class="faq-nav-title">Catégories</p>
+                    <ul class="faq-nav-list">
+                        <li><a href="#general" class="active">🧭 Général</a></li>
+                        <li><a href="#sites">🌐 Sites web</a></li>
+                        <li><a href="#auto">⚙️ Automatisation</a></li>
+                        <li><a href="#prix">💰 Prix & forfaits</a></li>
+                        <li><a href="#processus">🔄 Processus</a></li>
+                    </ul>
+                    <div class="faq-nav-cta">
+                        <p>Votre question n'est pas ici?</p>
+                        <a href="soumission.html">Posez-la-moi →</a>
+                    </div>
+                </aside>
+
+                <!-- Sections FAQ -->
+                <div class="faq-sections">
+
+                    <!-- GÉNÉRAL -->
+                    <div class="faq-category" id="general">
+                        <div class="faq-cat-header">
+                            <div class="faq-cat-icon">🧭</div>
+                            <h2>Général</h2>
+                        </div>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">C'est quoi exactement Info-API?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Info-API, c'est moi — Nicolas Caron, développeur web et spécialiste en automatisation basé à Laval. Je travaille seul, ce qui veut dire que vous avez toujours affaire à la même personne, du premier contact jusqu'à la livraison.</p>
+                                        <p>Je me spécialise dans deux domaines : les sites web professionnels pour PME et entrepreneurs, et les automatisations sur mesure pour éliminer les tâches répétitives de votre équipe.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Est-ce que vous travaillez seulement à Laval?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Non, je travaille partout au Québec et même à distance. La majorité du travail se fait en ligne — appels vidéo, partage d'écran, courriel.</p>
+                                        <p>Pour les clients à Laval et dans les environs, je suis également disponible pour des rencontres en personne si vous le préférez.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">J'ai zéro connaissance en informatique. Est-ce que ça va quand même fonctionner?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>C'est exactement pour vous que je travaille. Mon objectif est que vous n'ayez pas à comprendre la technique pour bénéficier du résultat.</p>
+                                        <p>Je traduis votre besoin en solution concrète, je vous explique ce qui a été fait en termes simples, et je m'assure que vous êtes capable d'utiliser ce que je livre — même sans formation technique.</p>
+                                        <div class="answer-highlight">Vous n'avez pas besoin de savoir comment ça marche pour que ça fonctionne pour vous.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Pourquoi choisir Info-API plutôt qu'une grande agence web?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Les grandes agences, c'est bien — mais vous parlez à un chargé de compte, puis le travail est délégué à un développeur que vous ne verrez jamais.</p>
+                                        <p>Avec moi, vous avez une personne qui s'implique à 100% dans votre projet, qui comprend votre contexte et qui reste disponible. Et souvent à un prix nettement inférieur.</p>
+                                        <ul>
+                                            <li>Interlocuteur unique du début à la fin</li>
+                                            <li>Flexibilité et réactivité impossible dans une grande structure</li>
+                                            <li>Code écrit sur mesure, pas un template acheté</li>
+                                            <li>Relation directe sans intermédiaires</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SITES WEB -->
+                    <div class="faq-category" id="sites">
+                        <div class="faq-cat-header">
+                            <div class="faq-cat-icon">🌐</div>
+                            <h2>Sites web</h2>
+                        </div>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Est-ce que je vais pouvoir modifier mon site moi-même?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Ça dépend du type de site. Pour les sites vitrines, je fournis un guide simple avec les étapes pour modifier les textes et images courantes. Pour les sites plus complexes, je peux intégrer un panneau d'administration.</p>
+                                        <p>Si vous ne souhaitez pas vous en occuper, je propose aussi des forfaits avec maintenance mensuelle où je m'occupe de toutes les mises à jour.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">C'est quoi le SEO et est-ce que ça sert vraiment à quelque chose?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>SEO signifie <strong>Search Engine Optimization</strong> — l'optimisation pour les moteurs de recherche comme Google. En termes simples, c'est l'ensemble des techniques qui font que votre site apparaît quand quelqu'un cherche un service comme le vôtre.</p>
+                                        <p>Est-ce que ça sert? Absolument. Si quelqu'un à Laval cherche "entrepreneur en construction" ou "restaurant végétarien Laval" sur Google, vous voulez être dans les premiers résultats.</p>
+                                        <div class="answer-highlight">Je fais le SEO de base sur tous mes projets. Pour aller plus loin (articles de blogue, campagnes de mots-clés), c'est un service supplémentaire.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Est-ce que le site fonctionnera sur téléphone?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Oui, sans exception. Tous les sites que je développe sont <strong>responsive</strong> — ils s'adaptent automatiquement aux téléphones, tablettes et ordinateurs. C'est une obligation, pas une option, puisque la majorité du trafic web vient maintenant des mobiles.</p>
+                                        <p>Je teste chaque site sur plusieurs appareils et tailles d'écran avant la livraison.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">J'ai déjà un site. Vous pouvez le refaire?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Absolument. Si vous avez déjà un site qui date, qui est difficile à utiliser sur mobile, ou qui ne vous représente plus bien, je peux le refaire entièrement.</p>
+                                        <p>Dans ce cas, j'analyse d'abord votre site actuel pour garder ce qui fonctionne (nom de domaine, contenu utile) et refaire ce qui ne fonctionne pas. Votre référencement Google est préservé lors de la transition.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Qui s'occupe de l'hébergement et du domaine?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>C'est flexible selon ce que vous préférez :</p>
+                                        <ul>
+                                            <li><strong>Je m'en occupe entièrement</strong> : Je configure l'hébergement et le domaine, vous avez juste à payer les frais annuels (~30–80$/an selon le fournisseur).</li>
+                                            <li><strong>Vous avez déjà un hébergement</strong> : Je déploie directement chez vous.</li>
+                                            <li><strong>Solution gratuite</strong> : Pour les petits projets, des plateformes comme Netlify offrent un hébergement gratuit de qualité.</li>
+                                        </ul>
+                                        <p>On en discute lors de la soumission pour choisir la meilleure option pour vous.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AUTOMATISATION -->
+                    <div class="faq-category" id="auto">
+                        <div class="faq-cat-header">
+                            <div class="faq-cat-icon">⚙️</div>
+                            <h2>Automatisation</h2>
+                        </div>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Comment je sais si mon besoin peut être automatisé?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Une bonne règle simple : si vous faites la même chose plus d'une fois par semaine, elle peut probablement être automatisée.</p>
+                                        <p>Décrivez-moi votre tâche en détail dans la soumission — je vous dis en 24h si c'est faisable, comment, et ce que ça coûterait. C'est gratuit et sans engagement.</p>
+                                        <div class="answer-highlight">Ne vous demandez pas si c'est "automatisable" — c'est mon travail de l'évaluer. Décrivez juste ce qui vous prend du temps.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Est-ce que vous pouvez connecter mes outils existants (Excel, Google, etc.)?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Oui, c'est l'un des cas les plus fréquents. Je peux créer des automatisations qui lisent vos fichiers Excel, remplissent des Google Sheets, envoient des courriels via Gmail, et connectent des outils qui normalement ne se parlent pas.</p>
+                                        <p>Les intégrations courantes : Excel/CSV, Google Sheets, Google Drive, Outlook/Gmail, systèmes de formulaires, bases de données simples.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Que se passe-t-il si l'automatisation tombe en panne?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Je conçois toutes mes automatisations avec des alertes en cas d'erreur — vous recevez un courriel si quelque chose ne fonctionne pas comme prévu, au lieu de découvrir le problème trop tard.</p>
+                                        <p>De plus, les forfaits avec maintenance incluent une surveillance continue et un correctif garanti sous 48h ouvrables si un problème survient.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Est-ce que mes données restent privées?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Absolument. Les automatisations tournent sur vos propres systèmes ou sur des serveurs sécurisés que vous contrôlez. Je ne garde aucun accès à vos données après la livraison, à moins que vous ne souhaitiez que je maintienne la solution.</p>
+                                        <p>Tout accès temporaire requis pour le développement est révoqué dès la livraison.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRIX -->
+                    <div class="faq-category" id="prix">
+                        <div class="faq-cat-header">
+                            <div class="faq-cat-icon">💰</div>
+                            <h2>Prix & forfaits</h2>
+                        </div>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Comment fonctionne la tarification? C'est fixe ou à l'heure?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Je travaille surtout à prix fixe par projet. Vous savez exactement combien ça va coûter avant que je commence — aucune surprise en fin de mois.</p>
+                                        <p>Pour les projets très évolutifs (nouvelles fonctionnalités au fil du temps), je propose aussi un forfait mensuel qui inclut un certain nombre d'heures de développement.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Vous êtes moins cher qu'une agence. Est-ce que la qualité est là?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Je comprends la question. La différence de prix vient du fait que je n'ai pas de bureaux, pas de gestionnaires de comptes, pas de marges d'agence. Tout l'argent va dans le travail réel.</p>
+                                        <p>Sur la qualité : regardez mes projets dans la section <a href="projets.html">Vitrine de projets</a>. Le code est propre, les sites sont rapides et optimisés, et les clients sont satisfaits.</p>
+                                        <div class="answer-highlight">Moins cher ne veut pas dire moins bien — ça veut dire moins d'intermédiaires.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Comment se fait le paiement?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Pour les projets à prix fixe, je divise généralement en deux versements :</p>
+                                        <ul>
+                                            <li><strong>50% au démarrage</strong> — pour commencer le travail</li>
+                                            <li><strong>50% à la livraison</strong> — quand vous êtes satisfait du résultat</li>
+                                        </ul>
+                                        <p>Pour les forfaits mensuels, la facturation se fait en début de mois. Virement bancaire ou PayPal acceptés.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Que comprennent les forfaits mensuels?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Les forfaits mensuels sont conçus pour les entreprises qui veulent une relation continue. Selon le forfait choisi, ils peuvent inclure :</p>
+                                        <ul>
+                                            <li>Maintenance et mises à jour du site</li>
+                                            <li>Modifications de contenu mensuelles</li>
+                                            <li>Support technique prioritaire</li>
+                                            <li>Rapport mensuel de performance</li>
+                                            <li>Hébergement et nom de domaine</li>
+                                            <li>Heures de développement pour nouvelles fonctionnalités</li>
+                                        </ul>
+                                        <p>Consultez la <a href="services.html">page Services</a> pour voir les forfaits détaillés.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROCESSUS -->
+                    <div class="faq-category" id="processus">
+                        <div class="faq-cat-header">
+                            <div class="faq-cat-icon">🔄</div>
+                            <h2>Processus</h2>
+                        </div>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Combien de temps prend la réalisation d'un site web?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Ça dépend du type et de la complexité, mais voici les délais typiques :</p>
+                                        <ul>
+                                            <li><strong>Landing page simple</strong> : 1–2 semaines</li>
+                                            <li><strong>Site vitrine 4-5 pages</strong> : 2–3 semaines</li>
+                                            <li><strong>Site avec fonctions spéciales</strong> (réservations, formulaires complexes) : 3–5 semaines</li>
+                                            <li><strong>E-commerce</strong> : 4–6 semaines</li>
+                                        </ul>
+                                        <p>Ces délais incluent la maquette, le développement et les révisions. La réactivité de votre côté pour les approbations joue aussi un rôle.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Qu'est-ce que vous avez besoin de moi pour commencer?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Pour démarrer, le strict minimum est :</p>
+                                        <ul>
+                                            <li>Votre logo (si vous en avez un)</li>
+                                            <li>Quelques photos de votre entreprise ou équipe</li>
+                                            <li>Vos coordonnées et infos de base</li>
+                                            <li>Une idée de ce que vous aimez et n'aimez pas visuellement</li>
+                                        </ul>
+                                        <p>Pas de logo? Pas de photos? Je peux travailler avec des ressources libres de droits et vous indiquer des ressources pour les obtenir à faible coût.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Combien de révisions est-ce que j'ai le droit?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Tous mes projets incluent <strong>2 rondes de révisions</strong> comprises dans le prix. Une ronde de révision = vous me donnez une liste de modifications, je les applique.</p>
+                                        <p>Si vous avez besoin de plus de révisions après les deux rondes incluses, c'est facturable à un tarif horaire. Dans la pratique, deux rondes suffisent presque toujours si les besoins sont bien définis dès le départ — c'est pourquoi je prends le temps de bien comprendre votre projet avant de commencer.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Qu'est-ce qui se passe si je ne suis pas satisfait?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Ma priorité est que vous soyez content du résultat. Si quelque chose ne vous convient pas, on en parle directement et on trouve comment arranger ça.</p>
+                                        <p>Je ne livre jamais un projet sans approbation de votre part. Vous voyez le travail avant que ce soit mis en ligne, et vous avez le droit de demander des ajustements dans le cadre des révisions incluses.</p>
+                                        <div class="answer-highlight">Si vous n'êtes pas prêt à dire "c'est bon, lance-le", je ne lance pas.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span class="faq-q-text">Est-ce que je reste propriétaire de mon site après la livraison?</span>
+                                    <span class="faq-chevron">▼</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>Oui, 100%. Dès que le projet est payé en totalité, vous êtes l'unique propriétaire du code, du contenu et de tout ce qui a été développé. Vous pouvez le modifier, le transférer, l'héberger où vous voulez.</p>
+                                        <p>Je ne garde aucun droit sur votre site après la livraison.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="faq-cta fade-section">
+        <div class="container">
+            <span class="section-tag">Une question non répondue?</span>
+            <h2>Posez-la-moi directement</h2>
+            <p>Je vous réponds personnellement sous 24h. Pas de formulaire compliqué, pas de robot.</p>
+            <a href="soumission.html" class="btn-primary">Envoyer ma question →</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Info-API — Nicolas Caron | Laval, Québec</p>
+            <p><a href="mailto:nicocaron26@gmail.com">nicocaron26@gmail.com</a> | <a href="tel:4383665758">438-366-5758</a></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+    /* Accordéon FAQ */
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.closest('.faq-item');
+            const isOpen = item.classList.contains('open');
+            /* Fermer tous dans la même liste */
+            const list = btn.closest('.faq-list');
+            list.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        });
+    });
+
+    /* Nav active au scroll */
+    const categories = document.querySelectorAll('.faq-category');
+    const navLinks = document.querySelectorAll('.faq-nav-list a');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                navLinks.forEach(a => {
+                    a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+                });
+            }
+        });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    categories.forEach(c => observer.observe(c));
+    </script>
+</body>
+</html>

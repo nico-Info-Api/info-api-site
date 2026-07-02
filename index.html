@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Info-API - Services informatiques à Laval : création de sites web et automatisation pour PME et entrepreneurs.">
+    <title>Info-API | Services Informatiques à Laval</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Info<span>API</span></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- OVERLAY MENU -->
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-overlay-inner">
+            <ul class="overlay-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li>
+                    <button class="overlay-dd-trigger">Services <span class="ov-arrow">+</span></button>
+                    <ul class="overlay-sub">
+                        <li><a href="sites-web.html">Sites web</a></li>
+                        <li><a href="automatisation.html">Solutions sur mesure</a></li>
+                        <li><a href="services.html">Forfaits entreprise</a></li>
+                    </ul>
+                </li>
+                <li><a href="apropos.html">À propos</a></li>
+                <li><a href="projets.html">Projets</a></li>
+            </ul>
+            <a href="soumission.html" class="overlay-cta">Prendre RDV Gratuitement</a>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero" style="background: linear-gradient(rgba(6,6,12,0.62), rgba(10,10,18,0.78)), url('images/computer.jpg') center/cover no-repeat;">
+        <div class="container">
+            <div class="hero-badge">Freelance disponible — Laval, Québec</div>
+            <h1>Votre présence en ligne,<br><span>enfin professionnelle.</span></h1>
+            <p>Création de sites web et solutions sur mesure pour PME, restaurants et entrepreneurs qui veulent se démarquer.</p>
+            <div class="hero-btns">
+                <a href="soumission.html" class="btn-primary">Prendre RDV Gratuitement</a>
+                <a href="#services" class="btn-secondary">Voir les services</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES APERCU -->
+    <section class="services-apercu" id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Services</span>
+                <h2>Ce que je fais pour vous</h2>
+                <p class="section-sub">Des solutions sur mesure pour digitaliser et automatiser votre activité.</p>
+            </div>
+            <div class="cards">
+                <div class="card" style="min-height:320px; padding:0; border:1.5px solid rgba(163,230,53,0.15); display:flex; flex-direction:column; justify-content:flex-end; background:#0a0a12;">
+                    <img src="images/website-illustration.avif" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.9;">
+                    <div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(10,10,18,0.05) 0%, rgba(10,10,18,0.75) 55%, rgba(10,10,18,0.97) 100%);"></div>
+                    <div style="position:relative;z-index:1;padding:28px 32px 32px;background:linear-gradient(to top, rgba(10,10,18,0.6) 0%, transparent 100%);border-radius:0 0 18px 18px;font-size:1.08em;">
+                        <h3>Création de sites web</h3>
+                        <p>Sites vitrine, restaurants, entrepreneurs et PME. Design moderne, adapté mobile et optimisé pour Google.</p>
+                        <a href="services.html">En savoir plus →</a>
+                    </div>
+                </div>
+                <div class="card" style="min-height:320px; padding:0; border:1.5px solid rgba(163,230,53,0.15); display:flex; flex-direction:column; justify-content:flex-end; background:#0a0a12;">
+                    <img src="images/script-image.avif" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.9;">
+                    <div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(10,10,18,0.05) 0%, rgba(10,10,18,0.75) 55%, rgba(10,10,18,0.97) 100%);"></div>
+                    <div style="position:relative;z-index:1;padding:28px 32px 32px;background:linear-gradient(to top, rgba(10,10,18,0.6) 0%, transparent 100%);border-radius:0 0 18px 18px;font-size:1.08em;">
+                        <h3>Solutions sur mesure</h3>
+                        <p>Automatisations, intégrations et outils personnalisés pour éliminer les tâches répétitives et gagner du temps.</p>
+                        <a href="automatisation.html">En savoir plus →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- POURQUOI MOI -->
+    <section class="pourquoi">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Pourquoi Info-API</span>
+                <h2>Un partenaire de confiance à Laval</h2>
+                <p class="section-sub">Local, disponible et transparent — je m'engage à livrer des résultats concrets.</p>
+            </div>
+            <div class="avantages">
+                <div class="avantage">
+                    <div class="avantage-icon"><span>✓</span></div>
+                    <p>Service local à Laval — disponible en personne ou à distance</p>
+                </div>
+                <div class="avantage">
+                    <div class="avantage-icon"><span>✓</span></div>
+                    <p>Réponse rapide — retour garanti dans les 24 heures</p>
+                </div>
+                <div class="avantage">
+                    <div class="avantage-icon"><span>✓</span></div>
+                    <p>Prix transparents — soumission gratuite sans engagement</p>
+                </div>
+                <div class="avantage">
+                    <div class="avantage-icon"><span>✓</span></div>
+                    <p>Formation en informatique — technicien certifié et rigoureux</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2>Prêt à lancer votre projet?</h2>
+            <p>Prenez rendez-vous gratuitement et sans engagement. Première réponse sous 24h.</p>
+            <a href="soumission.html" class="btn-primary">Prendre RDV Gratuitement</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>© 2026 Info-API — Nicolas Caron | Laval, Québec</p>
+            <p><a href="mailto:nicocaron26@gmail.com">nicocaron26@gmail.com</a> | <a href="tel:4383665758">438-366-5758</a></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

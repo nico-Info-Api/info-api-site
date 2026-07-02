@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Automatisez vos tâches répétitives et gagnez du temps avec Info-API à Laval. Scripts, rapports, formulaires et intégrations sur mesure.">
+    <title>Automatisation | Info-API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+    .auto-hero {
+        padding: 148px 0 72px;
+        background: linear-gradient(140deg, #06060c 0%, #0a0a12 48%, #0f0f17 100%);
+        text-align: center; position: relative; overflow: hidden;
+    }
+    .auto-hero::before {
+        content: ''; position: absolute; top: -15%; left: -5%;
+        width: 700px; height: 700px;
+        background: radial-gradient(circle, rgba(163,230,53,0.07) 0%, transparent 65%);
+        pointer-events: none;
+    }
+    .auto-hero .container { position: relative; z-index: 1; }
+    .auto-hero h1 { font-size: 50px; font-weight: 800; color: #fff; letter-spacing: -1.8px; margin-bottom: 16px; }
+    .auto-hero h1 span { color: #a3e635; }
+    .auto-hero p { font-size: 17px; color: rgba(255,255,255,0.55); max-width: 520px; margin: 0 auto 36px; line-height: 1.65; }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .hero-chip {
+        padding: 8px 18px; border-radius: 100px;
+        background: rgba(163,230,53,0.08); border: 1px solid rgba(163,230,53,0.2);
+        font-size: 13px; font-weight: 600; color: #bef264;
+    }
+
+    /* Section : concept simple */
+    .concept-section { padding: 80px 0 48px; background: #0f0f17; }
+    .concept-intro { text-align: center; max-width: 600px; margin: 0 auto 56px; }
+    .concept-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .concept-col { background: #16161f; border: 1.5px solid #2a2a38; border-radius: 18px; padding: 32px 28px; }
+    .concept-col h3 { font-size: 16px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 9px; color: #f1f5f9; }
+    .concept-col h3 .badge-avant { background: rgba(239,68,68,0.12); color: #fca5a5; padding: 3px 10px; border-radius: 100px; font-size: 12px; }
+    .concept-col h3 .badge-apres { background: rgba(163,230,53,0.12); color: #a3e635; padding: 3px 10px; border-radius: 100px; font-size: 12px; }
+    .concept-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 11px; }
+    .concept-col ul li { font-size: 14px; color: #cbd5e1; line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+    .concept-col.col-apres { border-color: rgba(163,230,53,0.25); background: rgba(163,230,53,0.04); }
+
+    /* Scénarios AVANT / APRÈS */
+    .scenarios-section { padding: 80px 0; background: #16161f; }
+    .scenarios-grid { display: flex; flex-direction: column; gap: 24px; margin-top: 48px; }
+    .scenario-card {
+        position: relative; border: 1.5px solid #2a2a38; border-radius: 18px; overflow: hidden;
+        transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s;
+    }
+    .scenario-card:hover { border-color: rgba(163,230,53,0.35); box-shadow: 0 12px 40px rgba(0,0,0,0.45); transform: translateY(-3px); }
+    .scenario-bg {
+        position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .scenario-card.open .scenario-bg { transform: scale(1.04); }
+    .scenario-header {
+        display: flex; align-items: flex-end; gap: 16px; padding: 24px 28px;
+        cursor: pointer; user-select: none;
+        position: relative; z-index: 1; height: 180px; overflow: visible;
+        background: linear-gradient(to bottom, rgba(10,10,18,0.08) 0%, rgba(10,10,18,0.88) 100%);
+    }
+    .scenario-title, .scenario-saving, .scenario-chevron { position: relative; z-index: 1; }
+    .scenario-title { flex: 1; }
+    .scenario-title h3 { font-size: 22px; font-weight: 700; color: #f1f5f9; margin-bottom: 5px; }
+    .scenario-title span { font-size: 15px; color: #b8c4d4; }
+    .scenario-saving { background: rgba(163,230,53,0.1); border: 1px solid rgba(163,230,53,0.2); color: #a3e635; font-size: 13px; font-weight: 700; padding: 5px 14px; border-radius: 100px; white-space: nowrap; }
+    .scenario-chevron { font-size: 14px; color: #b8c4d4; display: inline-block; transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); }
+    .scenario-card.open .scenario-chevron { transform: rotate(180deg); }
+    .scenario-body {
+        position: relative; z-index: 1;
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+        background: rgba(10,10,18,0.93);
+        border-top: 0px solid rgba(163,230,53,0.15);
+    }
+    .scenario-card.open .scenario-body {
+        max-height: 600px;
+    }
+    .scenario-body-inner { padding: 24px 28px; }
+    .scenario-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .sc-col h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 12px; }
+    .sc-col.avant h4 { color: #fca5a5; }
+    .sc-col.apres h4 { color: #a3e635; }
+    .sc-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 9px; }
+    .sc-col ul li { font-size: 13.5px; color: #cbd5e1; line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+    .sc-col ul li::before { content: ''; flex-shrink: 0; margin-top: 6px; }
+    .sc-col.avant ul li::before { content: '✗'; color: #fca5a5; font-weight: 700; margin-top: 0; }
+    .sc-col.apres ul li::before { content: '✓'; color: #a3e635; font-weight: 700; margin-top: 0; }
+
+    /* Ce qu'on peut automatiser */
+    .examples-section { padding: 80px 0; background: #0f0f17; }
+    .examples-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+    .ex-card {
+        background: #16161f; border: 1.5px solid #2a2a38; border-radius: 16px;
+        padding: 28px 24px 24px;
+        transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+    .ex-card:hover { border-color: rgba(163,230,53,0.3); transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.3); }
+    .ex-card h3 { font-size: 15.5px; font-weight: 700; color: #f1f5f9; margin-bottom: 10px; }
+    .ex-card p { font-size: 13.5px; color: #b8c4d4; line-height: 1.65; margin-bottom: 16px; }
+    .ex-tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ex-tag { font-size: 11px; font-weight: 600; padding: 4px 11px; border-radius: 100px; background: rgba(163,230,53,0.08); color: #a3e635; border: 1px solid rgba(163,230,53,0.18); }
+
+    /* Estimation gain */
+    .gain-section {
+        padding: 72px 0; background: linear-gradient(140deg, #06060c, #0f0f17);
+    }
+    .gain-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(163,230,53,0.08); border-radius: 18px; overflow: hidden; margin-top: 48px; }
+    .gain-item { background: rgba(163,230,53,0.04); padding: 32px 24px; text-align: center; }
+    .gain-val { font-size: 38px; font-weight: 800; color: #a3e635; letter-spacing: -1px; margin-bottom: 8px; }
+    .gain-label { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+
+    /* Process auto */
+    .process-auto { padding: 80px 0; background: #16161f; }
+    .process-auto-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 48px; counter-reset: step; }
+    .pas-step { background: #0f0f17; border: 1.5px solid #2a2a38; border-radius: 16px; padding: 28px 22px; position: relative; counter-increment: step; }
+    .pas-step::before { content: counter(step); position: absolute; top: -14px; left: 22px; width: 28px; height: 28px; background: #a3e635; color: #0a0a12; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .pas-step h3 { font-size: 15px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; }
+    .pas-step p { font-size: 13px; color: #8892a4; line-height: 1.55; }
+
+    /* CTA */
+    .auto-cta { padding: 80px 0; text-align: center; background: #0f0f17; }
+    .auto-cta h2 { font-size: 36px; font-weight: 800; color: #f1f5f9; letter-spacing: -0.8px; margin-bottom: 14px; }
+    .auto-cta p { font-size: 16px; color: #8892a4; max-width: 480px; margin: 0 auto 32px; line-height: 1.65; }
+    .auto-cta .note { font-size: 13px; color: #8892a4; margin-top: 14px; }
+
+    @media (max-width: 900px) {
+        .concept-cols { grid-template-columns: 1fr; }
+        .examples-grid { grid-template-columns: 1fr 1fr; }
+        .gain-grid { grid-template-columns: 1fr 1fr; }
+        .process-auto-steps { grid-template-columns: 1fr 1fr; }
+        .scenario-compare { grid-template-columns: 1fr; }
+        .scenario-saving { display: none; }
+    }
+    @media (max-width: 600px) {
+        .auto-hero h1 { font-size: 34px; }
+        .examples-grid { grid-template-columns: 1fr; }
+        .gain-grid { grid-template-columns: 1fr 1fr; }
+        .process-auto-steps { grid-template-columns: 1fr; }
+    }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Info<span>API</span></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- OVERLAY MENU -->
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-overlay-inner">
+            <ul class="overlay-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li>
+                    <button class="overlay-dd-trigger">Services <span class="ov-arrow">+</span></button>
+                    <ul class="overlay-sub">
+                        <li><a href="sites-web.html">Sites web</a></li>
+                        <li><a href="automatisation.html">Solutions sur mesure</a></li>
+                        <li><a href="services.html">Forfaits entreprise</a></li>
+                    </ul>
+                </li>
+                <li><a href="apropos.html">À propos</a></li>
+                <li><a href="projets.html">Projets</a></li>
+            </ul>
+            <a href="soumission.html" class="overlay-cta">Prendre RDV Gratuitement</a>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="auto-hero">
+        <div class="container">
+            <span class="section-tag" style="color:#a3e635;margin-bottom:14px;display:inline-block;">Automatisation</span>
+            <h1>Arrêtez de faire<br><span>la même chose deux fois</span></h1>
+            <p>Vos tâches répétitives volent des heures chaque semaine. Je les automatise — vous retrouvez du temps pour ce qui compte vraiment.</p>
+            <div class="hero-chips">
+                <span class="hero-chip">Scripts sur mesure</span>
+                <span class="hero-chip">Rapports automatiques</span>
+                <span class="hero-chip">Formulaires intelligents</span>
+                <span class="hero-chip">Intégrations systèmes</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- QU'EST-CE QUE L'AUTOMATISATION -->
+    <section class="concept-section fade-section">
+        <div class="container">
+            <div class="concept-intro">
+                <span class="section-tag">Le concept en simple</span>
+                <h2 class="section-header">Une tâche que vous faites à la main,<br>je la fais faire par un programme</h2>
+                <p class="section-sub">Pas besoin de comprendre le code. L'idée est simple : si une action se répète de la même façon, elle peut être automatisée.</p>
+            </div>
+            <div class="concept-cols">
+                <div class="concept-col">
+                    <h3>Sans automatisation <span class="badge-avant">Avant</span></h3>
+                    <ul>
+                        <li>Vous compilez un rapport Excel chaque lundi matin (2h)</li>
+                        <li>Vous copiez-collez des données d'un système à l'autre</li>
+                        <li>Vous envoyez manuellement des suivis par courriel</li>
+                        <li>Vous vérifiez vos fichiers un par un pour trouver les erreurs</li>
+                        <li>Vous saisissez les mêmes informations dans plusieurs endroits</li>
+                    </ul>
+                </div>
+                <div class="concept-col col-apres">
+                    <h3>Avec automatisation <span class="badge-apres">Après</span></h3>
+                    <ul>
+                        <li>Le rapport est généré et envoyé dimanche soir automatiquement</li>
+                        <li>Les données se synchronisent seules entre vos outils</li>
+                        <li>Les suivis partent au bon moment, sans que vous y pensiez</li>
+                        <li>Le programme détecte et vous signale les erreurs immédiatement</li>
+                        <li>Une seule saisie — tout le reste se remplit automatiquement</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCÉNARIOS AVANT/APRÈS -->
+    <section class="scenarios-section fade-section">
+        <div class="container">
+            <div style="text-align:center;max-width:600px;margin:0 auto 0;">
+                <span class="section-tag">Cas concrets</span>
+                <h2 class="section-header">Des exemples qui parlent</h2>
+                <p class="section-sub">Cliquez sur un scénario pour voir la différence.</p>
+            </div>
+            <div class="scenarios-grid">
+
+                <div class="scenario-card">
+                    <img class="scenario-bg" src="images/construction.jpg" alt="">
+                    <div class="scenario-header">
+                        <div class="scenario-title">
+                            <h3>Entrepreneur en construction</h3>
+                            <span>Soumissions et suivis de chantier</span>
+                        </div>
+                        <span class="scenario-saving">≈ 6h/semaine récupérées</span>
+                        <span class="scenario-chevron">▼</span>
+                    </div>
+                    <div class="scenario-body">
+                        <div class="scenario-body-inner">
+                            <div class="scenario-compare">
+                                <div class="sc-col avant">
+                                    <h4>Avant</h4>
+                                    <ul>
+                                        <li>Soumissions faites manuellement dans Word</li>
+                                        <li>Suivi des chantiers en cours dans un cahier</li>
+                                        <li>Relances clients oubliées ou faites trop tard</li>
+                                        <li>Aucune vue d'ensemble sur les projets actifs</li>
+                                    </ul>
+                                </div>
+                                <div class="sc-col apres">
+                                    <h4>Après</h4>
+                                    <ul>
+                                        <li>Formulaire en ligne → soumission PDF générée en 30 secondes</li>
+                                        <li>Tableau de bord mis à jour automatiquement</li>
+                                        <li>Relances envoyées automatiquement à J+3 et J+7</li>
+                                        <li>Vue complète de tous vos chantiers en temps réel</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario-card">
+                    <img class="scenario-bg" src="images/restauration.jpg" alt="">
+                    <div class="scenario-header">
+                        <div class="scenario-title">
+                            <h3>Restaurateur</h3>
+                            <span>Réservations et gestion des commandes</span>
+                        </div>
+                        <span class="scenario-saving">≈ 4h/semaine récupérées</span>
+                        <span class="scenario-chevron">▼</span>
+                    </div>
+                    <div class="scenario-body">
+                        <div class="scenario-body-inner">
+                            <div class="scenario-compare">
+                                <div class="sc-col avant">
+                                    <h4>Avant</h4>
+                                    <ul>
+                                        <li>Réservations par téléphone seulement — vous manquez des appels</li>
+                                        <li>Rappels de réservation envoyés à la main</li>
+                                        <li>Liste d'attente gérée dans un carnet</li>
+                                        <li>Statistiques de vente compilées manuellement</li>
+                                    </ul>
+                                </div>
+                                <div class="sc-col apres">
+                                    <h4>Après</h4>
+                                    <ul>
+                                        <li>Réservations en ligne 24h/24 depuis votre site web</li>
+                                        <li>Rappel automatique 24h avant par courriel ou SMS</li>
+                                        <li>Liste d'attente numérique avec notification automatique</li>
+                                        <li>Rapport hebdomadaire envoyé par courriel le lundi matin</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario-card">
+                    <img class="scenario-bg" src="images/entrepot.avif" alt="">
+                    <div class="scenario-header">
+                        <div class="scenario-title">
+                            <h3>Commerce de détail</h3>
+                            <span>Inventaire et commandes fournisseurs</span>
+                        </div>
+                        <span class="scenario-saving">≈ 5h/semaine récupérées</span>
+                        <span class="scenario-chevron">▼</span>
+                    </div>
+                    <div class="scenario-body">
+                        <div class="scenario-body-inner">
+                            <div class="scenario-compare">
+                                <div class="sc-col avant">
+                                    <h4>Avant</h4>
+                                    <ul>
+                                        <li>Inventaire compté à la main chaque semaine</li>
+                                        <li>Commandes fournisseurs passées au feeling</li>
+                                        <li>Produits en rupture découverts trop tard</li>
+                                        <li>Aucun historique de vente facilement accessible</li>
+                                    </ul>
+                                </div>
+                                <div class="sc-col apres">
+                                    <h4>Après</h4>
+                                    <ul>
+                                        <li>Inventaire mis à jour en temps réel à chaque vente</li>
+                                        <li>Alerte automatique quand un produit atteint le seuil minimum</li>
+                                        <li>Rapport de tendance pour savoir quoi commander</li>
+                                        <li>Historique complet consultable en quelques clics</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario-card">
+                    <img class="scenario-bg" src="images/meeting.jpg" alt="">
+                    <div class="scenario-header">
+                        <div class="scenario-title">
+                            <h3>Professionnel de service</h3>
+                            <span>Prise de rendez-vous et facturation</span>
+                        </div>
+                        <span class="scenario-saving">≈ 3h/semaine récupérées</span>
+                        <span class="scenario-chevron">▼</span>
+                    </div>
+                    <div class="scenario-body">
+                        <div class="scenario-body-inner">
+                            <div class="scenario-compare">
+                                <div class="sc-col avant">
+                                    <h4>Avant</h4>
+                                    <ul>
+                                        <li>Rendez-vous pris par téléphone et notés dans un agenda papier</li>
+                                        <li>Factures créées manuellement dans Word</li>
+                                        <li>Suivi des paiements dans un tableur Excel</li>
+                                        <li>Rappels de suivi jamais envoyés faute de temps</li>
+                                    </ul>
+                                </div>
+                                <div class="sc-col apres">
+                                    <h4>Après</h4>
+                                    <ul>
+                                        <li>Page de réservation en ligne connectée à votre agenda</li>
+                                        <li>Facture générée automatiquement après chaque rendez-vous</li>
+                                        <li>Alerte automatique pour les paiements en retard</li>
+                                        <li>Courriel de suivi envoyé automatiquement 3 jours après</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CE QU'ON PEUT AUTOMATISER -->
+    <section class="examples-section fade-section">
+        <div class="container">
+            <div style="text-align:center;max-width:600px;margin:0 auto 0;">
+                <span class="section-tag">Types d'automatisation</span>
+                <h2 class="section-header">Ce que je peux automatiser pour vous</h2>
+                <p class="section-sub">Chaque solution est développée sur mesure selon votre situation et vos outils actuels.</p>
+            </div>
+            <div class="examples-grid">
+
+                <div class="ex-card">
+                    <h3>Rapports automatiques</h3>
+                    <p>Vos données compilées et envoyées par courriel à la fréquence que vous choisissez. Fini le lundi matin en Excel.</p>
+                    <div class="ex-tag-list">
+                        <span class="ex-tag">Excel/CSV</span><span class="ex-tag">PDF</span><span class="ex-tag">Courriel</span>
+                    </div>
+                </div>
+
+                <div class="ex-card">
+                    <h3>Formulaires intelligents</h3>
+                    <p>Un client remplit un formulaire → vous recevez les infos organisées, un accusé de réception part au client, tout est sauvegardé.</p>
+                    <div class="ex-tag-list">
+                        <span class="ex-tag">Site web</span><span class="ex-tag">Notifications</span><span class="ex-tag">Base de données</span>
+                    </div>
+                </div>
+
+                <div class="ex-card">
+                    <h3>Intégrations entre outils</h3>
+                    <p>Vos outils qui ne se parlent pas? Je crée le pont. Une donnée entrée une fois se propage partout où elle doit aller.</p>
+                    <div class="ex-tag-list">
+                        <span class="ex-tag">API</span><span class="ex-tag">Sync</span><span class="ex-tag">Webhooks</span>
+                    </div>
+                </div>
+
+                <div class="ex-card">
+                    <h3>Courriels automatisés</h3>
+                    <p>Confirmations, rappels, relances, suivis — tout part au bon moment, sans que vous y pensiez.</p>
+                    <div class="ex-tag-list">
+                        <span class="ex-tag">Relances</span><span class="ex-tag">Rappels</span><span class="ex-tag">Confirmations</span>
+                    </div>
+                </div>
+
+                <div class="ex-card">
+                    <h3>Alertes et surveillances</h3>
+                    <p>Je configure des moniteurs qui vous avertissent quand quelque chose requiert votre attention — avant que ça devienne un problème.</p>
+                    <div class="ex-tag-list">
+                        <span class="ex-tag">Stocks</span><span class="ex-tag">Seuils</span><span class="ex-tag">Erreurs</span>
+                    </div>
+                </div>
+
+                <div class="ex-card">
+                    <h3>Gestion de fichiers</h3>
+                    <p>Tri, renommage, archivage, sauvegarde automatique — vos fichiers s'organisent selon vos règles, sans manipulation manuelle.</p>
+                    <div class="ex-tag-list">
+                        <span class="ex-tag">Scripts</span><span class="ex-tag">Sauvegarde</span><span class="ex-tag">Archivage</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- GAINS ESTIMÉS -->
+    <section class="gain-section fade-section">
+        <div class="container">
+            <div style="text-align:center;max-width:600px;margin:0 auto 0;">
+                <span class="section-tag" style="color:#a3e635;">Résultats concrets</span>
+                <h2 class="section-header" style="color:#fff;">En chiffres</h2>
+                <p class="section-sub" style="color:rgba(255,255,255,0.6);">Estimation basée sur les automatisations les plus fréquentes en PME.</p>
+            </div>
+            <div class="gain-grid">
+                <div class="gain-item">
+                    <div class="gain-val">3–10h</div>
+                    <div class="gain-label">récupérées chaque semaine</div>
+                </div>
+                <div class="gain-item">
+                    <div class="gain-val">0%</div>
+                    <div class="gain-label">d'erreurs de saisie manuelle</div>
+                </div>
+                <div class="gain-item">
+                    <div class="gain-val">24/7</div>
+                    <div class="gain-label">vos processus tournent sans vous</div>
+                </div>
+                <div class="gain-item">
+                    <div class="gain-val">+ROI</div>
+                    <div class="gain-label">la solution s'amortit dès le 1er mois</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMMENT ÇA MARCHE -->
+    <section class="process-auto fade-section">
+        <div class="container">
+            <div style="text-align:center;max-width:560px;margin:0 auto 0;">
+                <span class="section-tag">Mon processus</span>
+                <h2 class="section-header">Comment on procède</h2>
+            </div>
+            <div class="process-auto-steps">
+                <div class="pas-step">
+                    <h3>Vous décrivez le problème</h3>
+                    <p>Dites-moi ce qui vous prend du temps. Pas besoin de savoir si c'est "automatisable" — c'est mon rôle de l'évaluer.</p>
+                </div>
+                <div class="pas-step">
+                    <h3>J'analyse et je propose</h3>
+                    <p>Je reviens avec une solution concrète, un délai et un coût estimé. Vous décidez si ça vaut le coup.</p>
+                </div>
+                <div class="pas-step">
+                    <h3>Je développe la solution</h3>
+                    <p>Je code et teste l'automatisation dans votre environnement réel pour m'assurer que tout fonctionne.</p>
+                </div>
+                <div class="pas-step">
+                    <h3>Je vous explique et je livre</h3>
+                    <p>Vous recevez la solution avec une explication claire. Je reste disponible si quelque chose doit être ajusté.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="auto-cta fade-section">
+        <div class="container">
+            <span class="section-tag">Passez à l'action</span>
+            <h2>Vous avez une tâche répétitive en tête?</h2>
+            <p>Décrivez-la moi en quelques lignes. Je vous dis si c'est automatisable, comment, et combien ça coûte — gratuitement.</p>
+            <a href="soumission.html" class="btn-primary">Soumettre mon besoin gratuitement →</a>
+            <p class="note">Aucun engagement. Réponse personnalisée sous 24h.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Info-API — Nicolas Caron | Laval, Québec</p>
+            <p><a href="mailto:nicocaron26@gmail.com">nicocaron26@gmail.com</a> | <a href="tel:4383665758">438-366-5758</a></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+    /* Accordéon scénarios */
+    document.querySelectorAll('.scenario-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const card = header.closest('.scenario-card');
+            const isOpen = card.classList.contains('open');
+            document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('open'));
+            if (!isOpen) card.classList.add('open');
+        });
+    });
+    /* Ouvrir le premier par défaut */
+    document.querySelector('.scenario-card').classList.add('open');
+
+    </script>
+</body>
+</html>
