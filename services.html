@@ -7,9 +7,15 @@
     <title>Services | Info-API</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
+
+    /* ── GRAFFITI — titre principal ── */
+    .forfait-cta {
+        font-family: 'Permanent Marker', cursive;
+        letter-spacing: 3px;
+    }
 
     /* ── HERO ── */
     .services-hero {
@@ -25,8 +31,8 @@
     }
     .services-hero .container { position: relative; z-index: 1; }
     .services-hero h1 {
-        font-size: 52px; font-weight: 800; color: #fff;
-        letter-spacing: -2px; margin-bottom: 18px; line-height: 1.05;
+        font-size: 52px; color: #fff;
+        margin-bottom: 18px; line-height: 1.1;
     }
     .services-hero h1 span { color: #a3e635; }
     .services-hero p {
@@ -220,7 +226,7 @@
         pointer-events: none;
     }
     .cta-conseil .container { position: relative; z-index: 1; }
-    .cta-conseil h2 { font-size: 40px; font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 16px; }
+    .cta-conseil h2 { font-size: 40px; color: #fff; margin-bottom: 16px; }
     .cta-conseil p  { font-size: 17px; color: rgba(255,255,255,0.55); max-width: 500px; margin: 0 auto 40px; line-height: 1.65; }
 
     /* ── RESPONSIVE ── */
@@ -240,7 +246,9 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="container">
-            <a href="index.html" class="logo">Info<span>API</span></a>
+            <a href="index.html" class="logo" aria-label="Info-API — Accueil">
+                <img src="images/logo.png" alt="Info-API" class="nav-logo">
+            </a>
             <button class="hamburger" id="hamburger" aria-label="Menu">
                 <span></span><span></span><span></span>
             </button>
@@ -478,7 +486,7 @@
             <span class="section-tag" style="color:#a3e635;display:inline-block;margin-bottom:14px">Prochaine étape</span>
             <h2>Pas sûr de ce qu'il vous faut?</h2>
             <p>Décrivez-moi votre situation en quelques lignes. Je vous reviens sous 24h avec une recommandation gratuite et sans engagement.</p>
-            <a href="soumission.html" class="btn-primary">Obtenir mes recommandations gratuitement</a>
+            <a href="soumission.html" class="btn-primary">Prendre RDV Gratuitement</a>
         </div>
     </section>
 

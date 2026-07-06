@@ -7,15 +7,83 @@
     <title>Info-API | Services Informatiques à Laval</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+    .logo { display: inline-flex; align-items: center; }
+
+    /* === HERO GRAFFITI OVERRIDE === */
+    .hero::before, .hero::after { display: none; }
+
+    .hero-spray { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .spray-blob { position: absolute; border-radius: 50%; filter: blur(90px); }
+    .spray-blob-1 { width: 520px; height: 520px; background: #a3e635; opacity: 0.08; top: -15%; right: -8%; }
+    .spray-blob-2 { width: 280px; height: 280px; background: #a3e635; opacity: 0.04; bottom: 0%; left: -6%; }
+    .spray-blob-3 { width: 200px; height: 200px; background: #a3e635; opacity: 0.07; bottom: 18%; right: 12%; }
+
+    .hero-bg-tag {
+        position: absolute; pointer-events: none; user-select: none; z-index: 0;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 210px; line-height: 1;
+        color: rgba(163,230,53,0.022);
+        white-space: nowrap;
+        top: 48%; left: 50%;
+        transform: translate(-50%, -50%) rotate(-6deg);
+        letter-spacing: -6px;
+    }
+
+    .hero-badge {
+        font-family: 'Permanent Marker', cursive;
+        font-size: 13.5px; letter-spacing: 1.5px;
+        background: transparent;
+        border: 2px solid rgba(163,230,53,0.38);
+        border-radius: 4px;
+        padding: 6px 16px;
+        color: #a3e635;
+        transform: rotate(-0.8deg);
+        display: inline-block;
+    }
+
+    .hero h1 {
+        font-family: 'Permanent Marker', cursive;
+        font-size: 68px;
+        letter-spacing: 3px;
+        line-height: 1.12;
+        margin-bottom: 0;
+    }
+
+    .hero-h1-wrap { margin-bottom: 24px; }
+
+    .hero h1 span {
+        position: relative;
+        display: inline-block;
+        color: #a3e635;
+    }
+    .hero h1 span::after {
+        content: '';
+        position: absolute;
+        left: -3px; right: -3px; bottom: 3px;
+        height: 12px;
+        background: rgba(163,230,53,0.16);
+        transform: rotate(-1.2deg) skewX(-5deg);
+        border-radius: 2px;
+        z-index: -1;
+    }
+
+    @media (max-width: 768px) {
+        .hero h1 { font-size: 42px; letter-spacing: 0; }
+        .hero-bg-tag { font-size: 120px; }
+    }
+    </style>
 </head>
 <body>
 
     <!-- NAVIGATION -->
     <nav class="navbar">
         <div class="container">
-            <a href="index.html" class="logo">Info<span>API</span></a>
+            <a href="index.html" class="logo" aria-label="Info-API — Accueil">
+                <img src="images/logo.png" alt="Info-API" class="nav-logo">
+            </a>
             <button class="hamburger" id="hamburger" aria-label="Menu">
                 <span></span><span></span><span></span>
             </button>
@@ -43,10 +111,18 @@
     </div>
 
     <!-- HERO -->
-    <section class="hero" style="background: linear-gradient(rgba(6,6,12,0.62), rgba(10,10,18,0.78)), url('images/computer.jpg') center/cover no-repeat;">
+    <section class="hero">
+        <div class="hero-spray">
+            <div class="spray-blob spray-blob-1"></div>
+            <div class="spray-blob spray-blob-2"></div>
+            <div class="spray-blob spray-blob-3"></div>
+        </div>
+        <div class="hero-bg-tag" aria-hidden="true">INFO-API</div>
         <div class="container">
-            <div class="hero-badge">Freelance disponible — Laval, Québec</div>
-            <h1>Votre présence en ligne,<br><span>enfin professionnelle.</span></h1>
+            <div class="hero-badge">✦ Freelance disponible — Laval, Québec</div>
+            <div class="hero-h1-wrap">
+                <h1>Votre présence en ligne,<br><span>enfin professionnelle.</span></h1>
+            </div>
             <p>Création de sites web et solutions sur mesure pour PME, restaurants et entrepreneurs qui veulent se démarquer.</p>
             <div class="hero-btns">
                 <a href="soumission.html" class="btn-primary">Prendre RDV Gratuitement</a>

@@ -7,7 +7,7 @@
     <title>Soumission gratuite | Info-API</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
     .soumission-hero {
@@ -140,7 +140,9 @@
 
     <nav class="navbar">
         <div class="container">
-            <a href="index.html" class="logo">Info<span>API</span></a>
+            <a href="index.html" class="logo" aria-label="Info-API — Accueil">
+                <img src="images/logo.png" alt="Info-API" class="nav-logo">
+            </a>
             <button class="hamburger" id="hamburger" aria-label="Menu">
                 <span></span><span></span><span></span>
             </button>
@@ -190,11 +192,11 @@
                             <div class="form-row">
                                 <div>
                                     <label for="nom">Votre nom <span class="req">*</span></label>
-                                    <input type="text" id="nom" name="nom" placeholder="Nicolas Caron" required>
+                                    <input type="text" id="nom" name="nom" placeholder="Prénom, nom" required>
                                 </div>
                                 <div>
                                     <label for="entreprise">Entreprise <span class="opt">(optionnel)</span></label>
-                                    <input type="text" id="entreprise" name="entreprise" placeholder="Groupe ABS">
+                                    <input type="text" id="entreprise" name="entreprise" placeholder="Nom d'entreprise">
                                 </div>
                             </div>
                             <div class="form-row">

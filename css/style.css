@@ -55,12 +55,11 @@ a {
     transition: box-shadow 0.3s;
 }
 
-
 .navbar .container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 72px;
+    height: 96px;
 }
 
 .logo {
@@ -72,6 +71,17 @@ a {
 
 .logo span {
     color: var(--blue);
+}
+
+
+.nav-logo {
+    height: 86px;
+    width: auto;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .nav-logo { height: 58px; }
 }
 
 /* ===== HAMBURGER ===== */
@@ -300,7 +310,7 @@ a {
 
 /* ===== HERO ===== */
 .hero {
-    padding: 164px 0 110px;
+    padding: 190px 0 110px;
     background: linear-gradient(140deg, #06060c 0%, var(--navy) 45%, #0f0f1a 100%);
     text-align: center;
     position: relative;
@@ -447,37 +457,42 @@ a {
     background: var(--blue);
     color: #0a0a12;
     padding: 15px 32px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 16px;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    border-radius: 6px;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 15px;
+    letter-spacing: 3px;
+    transform: rotate(-1.2deg);
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.85), 0 4px 20px rgba(163,230,53,0.2);
     display: inline-block;
-    box-shadow: 0 4px 20px rgba(163, 230, 53, 0.32);
+    transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
 .btn-primary:hover {
     background: var(--blue-light);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(163, 230, 53, 0.44);
+    transform: rotate(-1.2deg) translateY(-3px);
+    box-shadow: 7px 8px 0 rgba(0,0,0,0.85), 0 8px 28px rgba(163,230,53,0.35);
 }
 
 .btn-secondary {
     background: rgba(255, 255, 255, 0.05);
     color: var(--white);
     padding: 15px 32px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
-    border: 1.5px solid rgba(255, 255, 255, 0.16);
-    transition: all 0.2s;
+    border-radius: 6px;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 15px;
+    letter-spacing: 3px;
+    border: 2px dashed rgba(255,255,255,0.25);
+    transform: rotate(0.9deg);
+    box-shadow: 3px 3px 0 rgba(255,255,255,0.07);
     display: inline-block;
-    backdrop-filter: blur(4px);
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.32);
-    transform: translateY(-2px);
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.45);
+    transform: rotate(0.9deg) translateY(-3px);
+    box-shadow: 5px 5px 0 rgba(255,255,255,0.07);
 }
 
 /* ===== SECTIONS ===== */
@@ -498,6 +513,11 @@ section {
     letter-spacing: 2px;
     text-transform: uppercase;
     margin-bottom: 12px;
+}
+
+h1 {
+    font-family: 'Permanent Marker', cursive;
+    letter-spacing: 3px;
 }
 
 section h2 {
@@ -703,8 +723,8 @@ section h2 {
 
 .cta .btn-primary:hover {
     background: var(--blue-light);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(163, 230, 53, 0.42);
+    transform: rotate(-1.2deg) translateY(-3px);
+    box-shadow: 7px 8px 0 rgba(0,0,0,0.85), 0 8px 28px rgba(163,230,53,0.35);
 }
 
 /* ===== FOOTER ===== */
@@ -732,14 +752,18 @@ footer a:hover {
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
+    .navbar .container { height: 70px; }
+
     .hero h1 {
         font-size: 38px;
         letter-spacing: -1.2px;
     }
 
     .hero {
-        padding: 130px 0 80px;
+        padding: 150px 0 80px;
     }
+
+    h1 { letter-spacing: 0; }
 
     section h2 {
         font-size: 28px;
